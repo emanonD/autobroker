@@ -15,6 +15,7 @@
 #include <QDialog>
 #include <QFormLayout>
 #include <QGroupBox>
+#include <QPicture>
 #include <string>
 #include <vector>
 #include <map>
@@ -44,10 +45,13 @@ private slots:
 	void editUser();
 	void changeSave();
 	void callHistory();
+	void viewSpecific();
+	void detailsPopup();
+	void cancelCHPopup();
+	void cancelPopup();
 	
 private:
 	//dbase db();
-	std::string saveKey;
 	vector<user> userR;
 	QHBoxLayout* overallLayout;
 	QVBoxLayout* lhsLayout;
@@ -69,6 +73,7 @@ private:
 	QRadioButton* searchFile; 
 	QRadioButton* inputFile; 
 	QRadioButton* exportFile; 
+	QRadioButton* viewPlan;
 	QPushButton* ok1Button; 
 	QPushButton* callButton;
 	QPushButton* inputData;
@@ -82,7 +87,6 @@ private:
 	QLineEdit* referralInput;
 	QLineEdit* ssnInput;
 	QComboBox* ethnicity;
-	QLineEdit* ethnicityQLineEdit;
 	QLabel* ethnicityLabel;
 	QLabel* title2Label;
 	QLineEdit* makeInput;
@@ -90,7 +94,6 @@ private:
 	QLineEdit* valueInput;
 	QLineEdit* featureInput;
 	QComboBox* gender;
-	QLineEdit* genderQLineEdit;
 	QLabel* genderLabel;
 	QLineEdit* income;
 	QLineEdit* dateinput;
@@ -110,7 +113,12 @@ private:
 	QLineEdit* RCamera;
 	QComboBox* purpose;
 	QDialog* popWindow;
+	QListWidget* listHistory;
+	QDialog* window;
+	string saveKey;
 	//void viewPopup();
+	vector<QImage*> Images;
+	QLabel* ImageContainer;
 	void showPopup();
 	void exportPopup();
 	void searchPopup();
@@ -118,5 +126,6 @@ private:
 	void sortN(vector<user> r);
 	void sortD(vector<user> r);
 	void saveSuccess();
-	
+	void planPopup();
+
 };

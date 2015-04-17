@@ -3,7 +3,7 @@
 #include "globals.h"
 #include <sstream>
 #include <iostream>
-
+#include "dbase/user.h"
 using namespace std;
 dbase db;
 
@@ -46,7 +46,7 @@ MainWindow::MainWindow()
 	
 	// Title
 	setWindowTitle("Welcome to Autobroker Database!");
-	overallLayout = new QHBoxLayout;
+	/*overallLayout = new QHBoxLayout;
 	lhsLayout = new QVBoxLayout;
 	
 	search = new QLabel("Search customer profile:");
@@ -56,7 +56,7 @@ MainWindow::MainWindow()
 	viewFile = new QPushButton("Search");
 	connect(viewFile, SIGNAL(clicked()), this, SLOT(viewPopup()));
 	lhsLayout->addWidget(viewFile);
-	overallLayout->addLayout(lhsLayout);
+	overallLayout->addLayout(lhsLayout);*/
 	buttonLayout = new QVBoxLayout;
 	inputData = new QPushButton("Select the Database");
 	connect(inputData, SIGNAL(clicked()), this, SLOT(selectFile()));
@@ -66,7 +66,6 @@ MainWindow::MainWindow()
 	searchFile = new QRadioButton("Search existing profile");
 	inputFile = new QRadioButton("Input new profile");
 	exportFile = new QRadioButton("Output to file");
-	viewPlan = new QRadioButton("Review Monthly Plan");
 	ok1Button = new QPushButton("OK");
 	connect(ok1Button, SIGNAL(clicked()), this, SLOT(choice()));
 
@@ -75,7 +74,6 @@ MainWindow::MainWindow()
 	buttonLayout->addWidget(searchFile);
 	buttonLayout->addWidget(inputFile);
 	buttonLayout->addWidget(exportFile);
-	buttonLayout->addWidget(viewPlan);
 	buttonLayout->addWidget(ok1Button);
 	setLayout(buttonLayout);
 }
@@ -108,34 +106,6 @@ void MainWindow::choice()
 	{
 		exportPopup();
 	}
-	else if (viewPlan->isChecked())
-	{
-		planPopup();
-	}
-}
-
-void MainWindow::planPopup()
-{
-	QDialog planWindow;
-	QVBoxLayout* overallLayout = new QVBoxLayout;
-	QCalendarWidget* planC = new QCalendarWidget;
-	overallLayout->addWidget(planC);
-	planC->setGridVisible(true);
-	QDate selectedDate = planC->selectedDate();
-	QString selectedDateQS = selectedDate.toString(Qt::TextDate); 
-	QPushButton* selectD = new QPushButton("Select date");
-	connect(selectD, SIGNAL(clicked()), this, SLOT(viewSpecific()));
-	overallLayout->addWidget(selectD);
-	planWindow.setLayout(overallLayout);
-	planWindow.exec();
-}
-
-void MainWindow::viewSpecific()
-{
-	QDialog specific;
-	QVBoxLayout* overallLayout = new QVBoxLayout;
-	specific.setLayout(overallLayout);
-	specific.exec();
 }
 
 //view profile, search, call history
@@ -187,74 +157,11 @@ void MainWindow::searchPopup()
 void MainWindow::callHistory()
 {
 	historyWindow = new QDialog;
-	QVBoxLayout* overallLayout = new QVBoxLayout;
-	listHistory = new QListWidget;
-	overallLayout->addWidget(listHistory);
 	historyWindow->setWindowTitle("View Call History");
 	if (profileListWidget->currentRow()<0)
 		return;
 	user temp = userR[profileListWidget->currentRow()];
-	vector<string> u = temp._name;
-	string userName="";
-	for (unsigned int i=0; i<u.size();i++)
-	{
-		userName=userName+" "+u[i];
-	
-	//QLabel* title = new QLabel(userName);
-	}
-	QString quser = QString::fromStdString(userName);
-	listHistory->addItem(quser);
-	
-	for (unsigned int i=0; i<temp._callHistory.size(); i++)
-	{
-		string chDate = temp._callHistory[i]._date;
-		QString qchDate = QString::fromStdString(chDate);
-		listHistory->addItem(qchDate);
-	}
-	QHBoxLayout* buttons = new QHBoxLayout;
-	QPushButton* addCall = new QPushButton("Add Call");
-	
-	QPushButton* details = new QPushButton("View Details");
-	connect(details, SIGNAL(clicked()), this, SLOT(detailsPopup()));
-	QPushButton* cancel = new QPushButton("Cancel");
-	connect(cancel, SIGNAL(clicked()), this, SLOT(cancelCHPopup()));
-	buttons->addWidget(details);
-	buttons->addWidget(addCall);
-	buttons->addWidget(cancel);
-	overallLayout->addLayout(buttons);
-	historyWindow->setLayout(overallLayout);
-	historyWindow->exec();
-}
 
-void MainWindow::cancelCHPopup()
-{
-	historyWindow->close();
-}
-
-void MainWindow::detailsPopup()
-{
-	window = new QDialog;
-	window->setWindowTitle("View Details");
-	QVBoxLayout* overallLayout = new QVBoxLayout;
-	if (listHistory->currentRow()<0)
-		return;
-	QListWidget* show = new QListWidget;
-	int index = listHistory->currentRow()+1;
-	user temp = userR[profileListWidget->currentRow()];
-	string output = temp._callHistory[index].displayString();
-	QString qoutput = QString::fromStdString(output);
-	show->addItem(qoutput);
-	QPushButton* cancel = new QPushButton("Cancel");
-	connect(cancel, SIGNAL(clicked()), this, SLOT(cancelPopup()));
-	overallLayout->addWidget(show);
-	overallLayout->addWidget(cancel);
-	window->setLayout(overallLayout);
-	window->exec();
-}
-
-void MainWindow::cancelPopup()
-{
-	window->close();
 }
 
 void MainWindow::editUser()
@@ -384,20 +291,11 @@ void MainWindow::editUser()
 	popWindow.setLayout(overallLayout);
 	popWindow.exec();
 
+	
+
+
+	
 }
-
-
-/*void MainWindow::uploadP()
-{
-	QString fileName = QFileDialog::getOpenFileName(this,tr("Open File"),"Home://","All files (*.*)");
-	QImage* newImage = new QImage();
-	//TODO what should go right here?
-	newImage->load(fileName);
-	Images.push_back(newImage);
-	ImageContainer = new QLabel();
-	ImageContainer->setPixmap(QPixmap::fromImage(*pokemonImages[pokemonIndex]));
-
-}*/
 
 void MainWindow::sortN(vector<user> r)
 {
@@ -488,12 +386,11 @@ void MainWindow::showPopup()
 	labelLayout->addWidget(title2Label);
 	overallLayout->addLayout(labelLayout);
 	//inputlhs->addRow(tr("&Customer Profile"),title1Label);
-	//inputlhs->addRow(tr("&Customer Profile"),title1Label);
 	nameInput = new QLineEdit("Name");
 	inputlhs->addRow(tr("&Name:"),nameInput);	
 	cellInput = new QLineEdit("Cell");
 	inputlhs->addRow(tr("&Cell #:"),cellInput);
-	cellInput2 = new QLineEdit("cell2");
+	cellInput2 = new QLineEdit("OtherCell");
 	inputlhs->addRow(tr("&other #:"),cellInput2);	
 	email = new QLineEdit("Email");
 	addressInput = new QLineEdit("Address");
@@ -501,13 +398,13 @@ void MainWindow::showPopup()
 	inputlhs->addRow(tr("&Address:"),addressInput);
 	referralInput = new QLineEdit("Referral");
 	inputlhs->addRow(tr("&Referral:"),referralInput);
-	brokerInput = new QLineEdit("broker");
+	brokerInput = new QLineEdit("Broker");
 	inputlhs->addRow(tr("&Broker"),brokerInput);
-	officeInput = new QLineEdit("office");
+	officeInput = new QLineEdit("Office");
 	inputlhs->addRow(tr("&Office"),officeInput);
 	ssnInput = new QLineEdit("SSN");
 	inputlhs->addRow(tr("&SSN:"),ssnInput);
-	income = new QLineEdit("income");
+	income = new QLineEdit("Income");
 	inputlhs->addRow(tr("&Monthly Income:"),income);
 	dob = new QLineEdit("DOB");
 	inputlhs->addRow(tr("&DOB:"),dob);
@@ -534,14 +431,11 @@ void MainWindow::showPopup()
 	occupation = new QLineEdit("Occupation");
 	inputlhs->addRow(tr("&Occupation:"),occupation);
 	input1->addLayout(inputlhs);
-	QPushButton* upload = new QPushButton("Upload pictures");
-	connect(upload, SIGNAL(clicked()), this, SLOT(uploadP()));
-	input1->addWidget(upload);
 	inputLayout->addLayout(input1);
 
 	
 
-makeInput = new QLineEdit("Make");
+	makeInput = new QLineEdit("Make");
 	inputrhs->addRow(tr("&Make:"),makeInput);
 	colorInput2 = new QLineEdit("exteriro");
 	inputrhs->addRow(tr("&Exterior Color:"),colorInput2);
@@ -574,7 +468,7 @@ makeInput = new QLineEdit("Make");
 
 
 	QLabel* Comment = new QLabel("Comments:");
-	commentInput = new QTextEdit();
+	commentInput = new QTextEdit("Comments");
 	input2->addLayout(inputrhs);
 	input2->addWidget(purposeLabel);
 	input2->addWidget(purpose);
