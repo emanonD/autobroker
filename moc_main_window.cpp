@@ -22,7 +22,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -35,6 +35,8 @@ static const uint qt_meta_data_MainWindow[] = {
       34,   11,   11,   11, 0x08,
       46,   11,   11,   11, 0x08,
       58,   11,   11,   11, 0x08,
+      69,   11,   11,   11, 0x08,
+      82,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -42,6 +44,7 @@ static const uint qt_meta_data_MainWindow[] = {
 static const char qt_meta_stringdata_MainWindow[] = {
     "MainWindow\0\0choice()\0selectFile()\0"
     "viewPopup()\0saveInput()\0editUser()\0"
+    "changeSave()\0callHistory()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -55,6 +58,8 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 2: _t->viewPopup(); break;
         case 3: _t->saveInput(); break;
         case 4: _t->editUser(); break;
+        case 5: _t->changeSave(); break;
+        case 6: _t->callHistory(); break;
         default: ;
         }
     }
@@ -93,9 +98,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 5)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 5;
+        _id -= 7;
     }
     return _id;
 }

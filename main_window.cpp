@@ -1,14 +1,45 @@
 #include "main_window.h"
 #include "dbase/dbase.h"
 #include "globals.h"
-#include "dbase/user.h"
-#include "dbase/car.h"
-#include "dbase/callHistory.h"
 #include <sstream>
 #include <iostream>
 
 using namespace std;
 dbase db;
+
+
+struct ObjN
+{
+	bool operator()(user u1, user u2)
+	{
+		string name1;
+		string name2;
+		vector<string> tempN1 = u1._name;
+		string nameInput1 = " ";
+		for (unsigned int i=0; i<tempN1.size(); i++)
+		{
+			nameInput1 = nameInput1+" "+tempN1[i];		
+		}
+		vector<string> tempN2 = u2._name;
+		string nameInput2 = " ";
+		for (unsigned int i=0; i<tempN2.size(); i++)
+		{
+			nameInput2 = nameInput1+" "+tempN2[i];		
+		}
+		return nameInput1<nameInput2;
+	}
+};
+
+struct ObjD
+{
+	bool operator()(user u1, user u2)
+	{
+		string date1 = u1._date;
+		string date2 = u2._date;
+		return date1<date2;
+	}
+};
+
 MainWindow::MainWindow()
 {
 
@@ -88,10 +119,10 @@ void MainWindow::searchPopup()
 	lhsLayout->addWidget(searchInput);
 	viewFile = new QPushButton("Search");
 	connect(viewFile, SIGNAL(clicked()), this, SLOT(viewPopup()));
-	lhsLayout->addWidget(viewFile);
+	
 
 	listLayout = new QGridLayout;
-	ok1 = new QPushButton("OK");
+	
 	list = new QComboBox();
 	listLabel = new QLabel("Choose list order:");
 	listLayout->addWidget(listLabel);
@@ -101,8 +132,8 @@ void MainWindow::searchPopup()
 	list->addItem("date sort");
 	listLayout->addWidget(listLabel, 1, 0, 1, 1);
 	listLayout->addWidget(list, 2, 0, 1, 2);
-	listLayout->addWidget(ok1, 2, 2, 1, 1);
-	listLayout->addWidget(list);
+	listLayout->addWidget(viewFile);
+	//listLayout->addWidget(list);
 	lhsLayout->addLayout(listLayout);
 	profileListWidget = new QListWidget();
 	//connect(profileWidget,SIGNAL(currentRowChanged(int)), this, SLOT(displayReview(int)));
@@ -110,6 +141,7 @@ void MainWindow::searchPopup()
 
 	searchButtons = new QGridLayout;
 	callButton = new QPushButton("Call History");
+	connect(callButton, SIGNAL(clicked()), this, SLOT(callHistory()));
 	editButton = new QPushButton("Edit User");
 	connect(editButton, SIGNAL(clicked()), this, SLOT(editUser()));
 	searchButtons->addWidget(callButton, 1, 0, 1, 1);
@@ -122,6 +154,15 @@ void MainWindow::searchPopup()
 	viewWindow.exec();
 }
 
+void MainWindow::callHistory()
+{
+	historyWindow = new QDialog;
+	historyWindow->setWindowTitle("View Call History");
+	if (profileListWidget->currentRow()<0)
+		return;
+	user temp = userR[profileListWidget->currentRow()];
+
+}
 
 void MainWindow::editUser()
 {
@@ -134,34 +175,42 @@ void MainWindow::editUser()
 	QVBoxLayout* input1 = new QVBoxLayout();
 	QFormLayout* inputrhs = new QFormLayout();
 	QVBoxLayout* input2 = new QVBoxLayout();
-	user temp;
+	if (profileListWidget->currentRow()<0)
+		return;
+	user temp = userR[profileListWidget->currentRow()];
+	car tempC = temp._car;
 	vector<string> tempN = temp._name;
 	string nameInput1 = " ";
 	for (unsigned int i=0; i<tempN.size(); i++)
 	{
 		nameInput1 = nameInput1+" "+tempN[i];
+		
 	}
-	nameInput->setPlaceholderText(QString::fromStdString(nameInput1));
-	//dateinput->setPlaceholderText(Qstring::fromStdString(temp._date));	
-	cellInput->setPlaceholderText(QString::fromStdString(temp._cell));	 
-	cellInput2->setPlaceholderText(QString::fromStdString(temp._other));	
-	email->setPlaceholderText(QString::fromStdString(temp._email));
+	
+	nameInput= new QLineEdit(QString::fromStdString(nameInput1));
+	dateinput= new QLineEdit(QString::fromStdString(temp._date));
+	cout << "set place..."	<< endl;
+	cellInput = new QLineEdit(QString::fromStdString(temp._cell));	 
+	cellInput2= new QLineEdit(QString::fromStdString(temp._other));	
+	email= new QLineEdit(QString::fromStdString(temp._email));
 	vector<string> tempA = temp._address;
 	string addressInput1 = " ";
 	for (unsigned int i=0; i<tempA.size(); i++)
 	{
 		addressInput1 = addressInput1+" "+tempA[i];
+		cout << addressInput1;
 	}
-	addressInput->setPlaceholderText(QString::fromStdString(addressInput1));
-	referralInput->setPlaceholderText(QString::fromStdString(temp._Referral));
-	brokerInput->setPlaceholderText(QString::fromStdString(temp._Broker));
-	officeInput->setPlaceholderText(QString::fromStdString(temp._Office));
-	ssnInput->setPlaceholderText(QString::fromStdString(temp._SSN));	
-	income->setPlaceholderText(QString::fromStdString(temp._MonthlyIncome));	
-	dob->setPlaceholderText(QString::fromStdString(temp._DOB));
+	cout << endl;
+	addressInput= new QLineEdit(QString::fromStdString(addressInput1));
+	referralInput= new QLineEdit(QString::fromStdString(temp._Referral));
+	brokerInput= new QLineEdit(QString::fromStdString(temp._Broker));
+	officeInput= new QLineEdit(QString::fromStdString(temp._Office));
+	ssnInput= new QLineEdit(QString::fromStdString(temp._SSN));	
+	income= new QLineEdit(QString::fromStdString(temp._MonthlyIncome));	
+	dob= new QLineEdit(QString::fromStdString(temp._DOB));
 	//ethnicity->setPalceholderText(QString::fromStdString(temp._Ethnicity));
 	//gender->setPlaceholderText(QString::fromStdString(temp._Gender));
-	occupation->setPlaceholderText(QString::fromStdString(temp._Occupation));
+	occupation= new QLineEdit(QString::fromStdString(temp._Occupation));
 
 	
 
@@ -173,10 +222,12 @@ void MainWindow::editUser()
 	overallLayout->addLayout(labelLayout);
 	//inputlhs->addRow(tr("&Customer Profile"),title1Label);
 	
+	cout << 1 << endl;
+
 	inputlhs->addRow(tr("&Name:"),nameInput);		
 	inputlhs->addRow(tr("&Date:"),dateinput);	
 	inputlhs->addRow(tr("&Cell #:"),cellInput);	
-	inputlhs->addRow(tr("&other #:"),cellInput2);		
+	inputlhs->addRow(tr("&Other #:"),cellInput2);		
 	inputlhs->addRow(tr("&Email:"),email);
 	inputlhs->addRow(tr("&Address:"),addressInput);	
 	inputlhs->addRow(tr("&Referral:"),referralInput);	
@@ -185,61 +236,76 @@ void MainWindow::editUser()
 	inputlhs->addRow(tr("&SSN:"),ssnInput);	
 	inputlhs->addRow(tr("&Monthly Income:"),income);
 	inputlhs->addRow(tr("&DOB:"),dob);
-	
-	
-	ethnicityLabel = new QLabel("Ethnicity:");
-	inputlhs->addRow(ethnicity);
-	
-
-	gender = new QComboBox();
-	genderLabel = new QLabel("Gender:");
-	inputlhs->addRow(genderLabel);
-	
-	//Choose the way of listing
-	gender->addItem("Male");
-	gender->addItem("Female");
-	inputlhs->addRow(gender);
-	occupation = new QLineEdit();
+	QLineEdit* ethnicity = new QLineEdit(QString::fromStdString(temp._Ethnicity));
+	inputlhs->addRow(tr("&Ethnicity:"),ethnicity);
+	QLineEdit* gender = new QLineEdit(QString::fromStdString(temp._Gender));
+	inputlhs->addRow(tr("&Gender:"),gender);
 	inputlhs->addRow(tr("&Occupation:"),occupation);
 	input1->addLayout(inputlhs);
 	inputLayout->addLayout(input1);
-
-	
-
-	inputrhs->addRow(tr("&Make:"),makeInput);
-	
-	inputrhs->addRow(tr("&Exterior Color:"),colorInput2);
-	
-	inputrhs->addRow(tr("&Interior Color:"),colorInput);
-	
-	inputrhs->addRow(tr("&Year:"),yearInput);
-	
-	inputrhs->addRow(tr("&M.R.S.P:"),mrsp);
-	
-	inputrhs->addRow(tr("&Current Value:"),valueInput);	
-	
-	inputrhs->addRow(tr("&Navigation:"),navigation);
-	
-	inputrhs->addRow(tr("&Rear Camera:"),RCamera);
-	
+	makeInput = new QLineEdit(QString::fromStdString(tempC._make));
+	colorInput2 = new QLineEdit(QString::fromStdString(tempC._exterior));	
+	colorInput = new QLineEdit(QString::fromStdString(tempC._interior));
+	yearInput = new QLineEdit(QString::fromStdString(tempC._year));
+	mrsp = new QLineEdit(QString::fromStdString(tempC._MRSP));
+	valueInput = new QLineEdit(QString::fromStdString(tempC._value));
+	navigation = new QLineEdit(QString::fromStdString(tempC._navigation));
+	RCamera = new QLineEdit(QString::fromStdString(tempC._rearCamera));
+	featureInput = new QLineEdit(QString::fromStdString(tempC._feature));
+	inputrhs->addRow(tr("&Make:"),makeInput);	
+	inputrhs->addRow(tr("&Exterior Color:"),colorInput2);	
+	inputrhs->addRow(tr("&Interior Color:"),colorInput);	
+	inputrhs->addRow(tr("&Year:"),yearInput);	
+	inputrhs->addRow(tr("&M.R.S.P:"),mrsp);	
+	inputrhs->addRow(tr("&Current Value:"),valueInput);		
+	inputrhs->addRow(tr("&Navigation:"),navigation);	
+	inputrhs->addRow(tr("&Rear Camera:"),RCamera);	
 	inputrhs->addRow(tr("&Additional Features:"),featureInput);
+	QCalendarWidget* editC = new QCalendarWidget;
+	editC->setGridVisible(true);
+	QDate selectedDate = editC->selectedDate();
+	QString selectedDateQS = selectedDate.toString(Qt::TextDate); 
+	string selectedDateS = selectedDateQS.toStdString();
+	//add to data structure
 	input2->addLayout(inputrhs);
+	QLabel* addCallHistory = new QLabel("Select Call-back Date:");
+	input2->addWidget(addCallHistory);
+	input2->addWidget(editC);
 	inputLayout->addLayout(input2);
 	//inputLayout->addLayout(inputlhs);
 	/*inputLayout->addLayout(inputmhs);
 	inputLayout->addLayout(inputrhs);*/
-	overallLayout->addLayout(inputLayout);
 	
+	overallLayout->addLayout(inputLayout);
+	QHBoxLayout* button = new QHBoxLayout;
 	QPushButton* saveButton = new QPushButton("Save");
-	connect(saveButton, SIGNAL(clicked()), this, SLOT(saveInput()));
+	button->addWidget(saveButton);
+	QPushButton* viewButton = new QPushButton("View Call History");
+	button->addWidget(viewButton);
+	QPushButton* addButton = new QPushButton("Add Call History");
+	button->addWidget(addButton);
+	connect(saveButton, SIGNAL(clicked()), this, SLOT(changeSave()));
 	overallLayout->addWidget(saveButton);
 	popWindow.setLayout(overallLayout);
 	popWindow.exec();
 
 	
-	
+
 
 	
+}
+
+void MainWindow::sortN(vector<user> r)
+{
+	ObjN objN;
+	mergeSort(r,objN);
+}
+
+void MainWindow::sortD(vector<user> r)
+{	
+	ObjD objD;
+	mergeSort(r,objD);
+
 }
 
 void MainWindow::viewPopup()
@@ -254,9 +320,20 @@ void MainWindow::viewPopup()
 		R.push_back(temp);
 	}
 	userR = db.search(R);
+	if (list->currentIndex() == 0)
+	{
+		sortN(userR);
+	}
+	//sort by rate
+	else if (list->currentIndex() == 1)
+	{
+		sortD(userR);
+	}
+		profileListWidget->clear();
 	for (unsigned int i=0; i<userR.size(); i++)
 	{
 		std::string str1= userR[i].displayString();
+		cout << "search result " << str1 << endl;
 		QString qstr1 = QString::fromStdString(str1);
 		profileListWidget->addItem(qstr1);
 	}
@@ -271,18 +348,10 @@ void MainWindow::exportPopup()
 	ofstream of(name.c_str());
 	db.dump(of);
 	of.close();
-
-	/*save->setWindowTitle("Save to File");
-	overallSLayout = new QVBoxLayout();
-	saveLabel = new QLabel("Please input file name");
-	overallSLayout->addWidget(saveLabel);
 	
-	okButton = new QPushButton("OK");
-	connect(okButton, SIGNAL(clicked()), this, SLOT(ofile()));
-	overallSLayout->addWidget(okButton);
-	save->setLayout(overallSLayout);
-	save->exec();*/
+	
 }
+
 
 //function of ofile
 void MainWindow::ofile()
@@ -298,8 +367,8 @@ void MainWindow::showPopup()
 //TODO
 
 //add call back date QCalendar
-	QDialog popWindow;
-	popWindow.setWindowTitle("Input Data");
+	popWindow = new QDialog;
+	popWindow->setWindowTitle("Input Data");
 	QVBoxLayout* overallLayout = new QVBoxLayout();
 	QHBoxLayout* inputLayout = new QHBoxLayout();
 	QHBoxLayout* labelLayout = new QHBoxLayout();
@@ -317,9 +386,6 @@ void MainWindow::showPopup()
 	//inputlhs->addRow(tr("&Customer Profile"),title1Label);
 	nameInput = new QLineEdit();
 	inputlhs->addRow(tr("&Name:"),nameInput);	
-	
-	dateinput = new QLineEdit();
-	inputlhs->addRow(tr("&Date:"),dateinput);
 	cellInput = new QLineEdit();
 	inputlhs->addRow(tr("&Cell #:"),cellInput);
 	cellInput2 = new QLineEdit();
@@ -385,7 +451,29 @@ void MainWindow::showPopup()
 	inputrhs->addRow(tr("&Rear Camera:"),RCamera);
 	featureInput = new QLineEdit();
 	inputrhs->addRow(tr("&Additional Features:"),featureInput);
+	QLabel* addition = new QLabel("Additional Information:");
+	inputrhs->addRow(addition);
+	purpose = new QComboBox();
+	QLabel* purposeLabel = new QLabel("Purpose of Calling:");
+	
+	purpose->addItem("Purchasing");
+	purpose->addItem("Leasing");
+	QLabel* callDate = new QLabel("Select Date:");
+	editC = new QCalendarWidget;
+	editC->setGridVisible(true);
+	
+	//add to data structure
+
+
+	QLabel* Comment = new QLabel("Comments:");
+	commentInput = new QTextEdit();
 	input2->addLayout(inputrhs);
+	input2->addWidget(purposeLabel);
+	input2->addWidget(purpose);
+	input2->addWidget(callDate);
+	input2->addWidget(editC);
+	input2->addWidget(Comment);
+	input2->addWidget(commentInput);
 	inputLayout->addLayout(input2);
 	//inputLayout->addLayout(inputlhs);
 	/*inputLayout->addLayout(inputmhs);
@@ -395,17 +483,16 @@ void MainWindow::showPopup()
 	QPushButton* saveButton = new QPushButton("Save");
 	connect(saveButton, SIGNAL(clicked()), this, SLOT(saveInput()));
 	overallLayout->addWidget(saveButton);
-	popWindow.setLayout(overallLayout);
-	popWindow.exec();
+	popWindow->setLayout(overallLayout);
+	popWindow->exec();
 
 }
 
-void MainWindow::saveInput()
+void MainWindow::changeSave()
 {
 	string nameS = nameInput->text().toStdString();
 	for(int i=0;i<(int)nameS.size();i++)
 		if (nameS[i]==' ') nameS[i]='*';
-	string dateS = dateinput->text().toStdString();
 	string cellS = cellInput->text().toStdString();
 	string cell2S = cellInput2->text().toStdString();
 	string emailS = email->text().toStdString();
@@ -418,7 +505,109 @@ void MainWindow::saveInput()
 	string incomeS = income->text().toStdString();
 	string dobS = dob->text().toStdString();
 	string officeS = officeInput->text().toStdString();
-	ethnicity = new QComboBox();
+	//ethnicity = new QComboBox();
+	string ethnicityS;
+	if (ethnicity->currentIndex() == 0)
+	{
+		ethnicityS = "Asian";
+	}
+	else if (ethnicity->currentIndex() == 1)
+	{
+		ethnicityS = "AmericanIndianorAlaskaNative";
+	}
+	else if (ethnicity->currentIndex() == 2)
+	{
+		ethnicityS = "BlackorAfricanAmerican";
+	}
+	else if (ethnicity->currentIndex() == 3)
+	{
+		ethnicityS = "NativeHawaiianorOtherPacificIslander";
+	}
+	else if (ethnicity->currentIndex() == 4)
+	{
+		ethnicityS = "White";
+	}
+	string genderS;
+	if (gender->currentIndex() == 0)
+	{
+		genderS = "Male";
+	}
+	else if (gender->currentIndex() == 1)
+	{
+		genderS = "Female";
+	}
+	cout << "ohhh lala" << endl;
+	string occupationS = occupation->text().toStdString();	
+	string makeS = makeInput->text().toStdString();
+	string color1S = colorInput2->text().toStdString();
+	string color2S = colorInput->text().toStdString();
+	string yearS = yearInput->text().toStdString();
+	string mrspS = mrsp->text().toStdString();
+	string valueInputS = valueInput->text().toStdString();
+	string navigationS = navigation->text().toStdString();
+	string CameraS = RCamera->text().toStdString();
+	string featureS = featureInput->text().toStdString();
+	map<string,user>::iterator it;
+	for (it=db.users.begin(); it!=db.users.end();++it)
+	{
+		if (db.users.find(nameS)!=db.users.end())
+		{
+			break;
+		}
+	}
+	cout << "find user " << endl;
+	user temp =it->second;
+	
+	temp._cell = cellS;
+	temp._other = cell2S;
+	int lastloc=0;
+	for(int i=0;i<(int)addressInputS.size();i++)
+	{
+		if (addressInputS[i]=='*')
+		{
+			temp._address.push_back(addressInputS.substr(lastloc,i-lastloc));		
+			
+			lastloc=i+1;
+
+		}		
+	}
+	cout << "after address " << endl;
+	QDate selectedDate = editC->selectedDate();
+	QString selectedDateQS = selectedDate.toString(Qt::TextDate); 
+	string selectedDateS = selectedDateQS.toStdString();
+	temp._date = selectedDateS;
+	temp._address.push_back(addressInputS.substr(lastloc,addressInputS.size()-lastloc));
+	temp._email=emailS;
+	temp._Referral=referralS;
+	temp._Broker=brokerS;
+	temp._Office=officeS;
+	temp._SSN=ssnS;
+	temp._MonthlyIncome=incomeS;
+	temp._DOB=dobS;
+	temp._Ethnicity=ethnicityS;
+	temp._Gender=genderS;
+	temp._Occupation=occupationS;
+}
+
+void MainWindow::saveInput()
+{
+	string nameS = nameInput->text().toStdString();
+	for(int i=0;i<(int)nameS.size();i++)
+		if (nameS[i]==' ') nameS[i]='*';
+	
+	string cellS = cellInput->text().toStdString();
+	string cell2S = cellInput2->text().toStdString();
+	string emailS = email->text().toStdString();
+	string addressInputS = addressInput->text().toStdString();
+	for(int i=0;i<(int)addressInputS.size();i++)
+		if (addressInputS[i]==' ') addressInputS[i]='*';
+	string referralS = referralInput->text().toStdString();
+	string brokerS = brokerInput->text().toStdString();
+	string ssnS = ssnInput->text().toStdString();
+	string incomeS = income->text().toStdString();
+	string dobS = dob->text().toStdString();
+	string officeS = officeInput->text().toStdString();
+	//ethnicity = new QComboBox();
 	string ethnicityS;
 	if (ethnicity->currentIndex() == 0)
 	{
@@ -460,7 +649,21 @@ void MainWindow::saveInput()
 	string navigationS = navigation->text().toStdString();
 	string CameraS = RCamera->text().toStdString();
 	string featureS = featureInput->text().toStdString();
-	user newUser(nameS,dateS,cellS,cell2S,addressInputS);
+	string purposeS;
+	if (purpose->currentIndex() == 0)
+	{
+		purposeS = "Purchasing";
+	}
+	else if (purpose->currentIndex() == 1)
+	{
+		purposeS = "Leasing";
+	}
+	string commentS = commentInput->toPlainText().toStdString();
+	QDate selectedDate = editC->selectedDate();
+	QString selectedDateQS = selectedDate.toString(Qt::TextDate); 
+	string selectedDateS = selectedDateQS.toStdString();
+	user newUser(nameS,selectedDateS,cellS,cell2S,addressInputS);
+	cout << "what's wrong " << endl;
 	newUser._email=emailS;
 	newUser._Referral=referralS;
 	newUser._Broker=brokerS;
@@ -472,6 +675,27 @@ void MainWindow::saveInput()
 	newUser._Gender=genderS;
 	newUser._Occupation=occupationS;
 	db.addUser(newUser);
+	//initialize car
+	car addCar(makeS,color1S,color2S,yearS);
+	addCar._MRSP=mrspS;
+	addCar._value=valueInputS;
+	addCar._navigation=navigationS;
+	addCar._rearCamera=CameraS;
+	addCar._feature=featureS;
+	//add call history
+	newUser._callHistoryNum=1;
+	//callHistory callH(selectedDateS,addCar,purposeS,commentS);
+	//newUser._callHistory.push_back(callH);
+	saveSuccess();
+}
 
+void MainWindow::saveSuccess()
+{
+	popWindow->close();
+	QMessageBox* msgBox = new QMessageBox;
+	msgBox->setWindowTitle("Success");
+	msgBox->setText("Your input has been successfully saved!");
+	msgBox->setStandardButtons(QMessageBox::Cancel);
+	msgBox->exec();	
 }
 
