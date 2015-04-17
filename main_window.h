@@ -47,6 +47,7 @@ private slots:
 	
 private:
 	//dbase db();
+	std::string saveKey;
 	vector<user> userR;
 	QHBoxLayout* overallLayout;
 	QVBoxLayout* lhsLayout;
@@ -81,6 +82,7 @@ private:
 	QLineEdit* referralInput;
 	QLineEdit* ssnInput;
 	QComboBox* ethnicity;
+	QLineEdit* ethnicityQLineEdit;
 	QLabel* ethnicityLabel;
 	QLabel* title2Label;
 	QLineEdit* makeInput;
@@ -88,6 +90,7 @@ private:
 	QLineEdit* valueInput;
 	QLineEdit* featureInput;
 	QComboBox* gender;
+	QLineEdit* genderQLineEdit;
 	QLabel* genderLabel;
 	QLineEdit* income;
 	QLineEdit* dateinput;

@@ -179,8 +179,9 @@ void MainWindow::editUser()
 		return;
 	user temp = userR[profileListWidget->currentRow()];
 	car tempC = temp._car;
+	saveKey=temp._key;
 	vector<string> tempN = temp._name;
-	string nameInput1 = " ";
+	string nameInput1 = "";
 	for (unsigned int i=0; i<tempN.size(); i++)
 	{
 		nameInput1 = nameInput1+" "+tempN[i];
@@ -194,13 +195,14 @@ void MainWindow::editUser()
 	cellInput2= new QLineEdit(QString::fromStdString(temp._other));	
 	email= new QLineEdit(QString::fromStdString(temp._email));
 	vector<string> tempA = temp._address;
-	string addressInput1 = " ";
+	string addressInput1 = "";
 	for (unsigned int i=0; i<tempA.size(); i++)
 	{
 		addressInput1 = addressInput1+" "+tempA[i];
 		cout << addressInput1;
 	}
 	cout << endl;
+
 	addressInput= new QLineEdit(QString::fromStdString(addressInput1));
 	referralInput= new QLineEdit(QString::fromStdString(temp._Referral));
 	brokerInput= new QLineEdit(QString::fromStdString(temp._Broker));
@@ -236,10 +238,10 @@ void MainWindow::editUser()
 	inputlhs->addRow(tr("&SSN:"),ssnInput);	
 	inputlhs->addRow(tr("&Monthly Income:"),income);
 	inputlhs->addRow(tr("&DOB:"),dob);
-	QLineEdit* ethnicity = new QLineEdit(QString::fromStdString(temp._Ethnicity));
-	inputlhs->addRow(tr("&Ethnicity:"),ethnicity);
-	QLineEdit* gender = new QLineEdit(QString::fromStdString(temp._Gender));
-	inputlhs->addRow(tr("&Gender:"),gender);
+	QLineEdit* ethnicityQLineEdit = new QLineEdit(QString::fromStdString(temp._Ethnicity));
+	inputlhs->addRow(tr("&Ethnicity:"),ethnicityQLineEdit);
+	QLineEdit* genderQLineEdit = new QLineEdit(QString::fromStdString(temp._Gender));
+	inputlhs->addRow(tr("&Gender:"),genderQLineEdit);
 	inputlhs->addRow(tr("&Occupation:"),occupation);
 	input1->addLayout(inputlhs);
 	inputLayout->addLayout(input1);
@@ -384,27 +386,27 @@ void MainWindow::showPopup()
 	labelLayout->addWidget(title2Label);
 	overallLayout->addLayout(labelLayout);
 	//inputlhs->addRow(tr("&Customer Profile"),title1Label);
-	nameInput = new QLineEdit();
+	nameInput = new QLineEdit("Name");
 	inputlhs->addRow(tr("&Name:"),nameInput);	
-	cellInput = new QLineEdit();
+	cellInput = new QLineEdit("Cell");
 	inputlhs->addRow(tr("&Cell #:"),cellInput);
-	cellInput2 = new QLineEdit();
+	cellInput2 = new QLineEdit("OtherCell");
 	inputlhs->addRow(tr("&other #:"),cellInput2);	
-	email = new QLineEdit();
-	addressInput = new QLineEdit();
+	email = new QLineEdit("Email");
+	addressInput = new QLineEdit("Address");
 	inputlhs->addRow(tr("&Email:"),email);
 	inputlhs->addRow(tr("&Address:"),addressInput);
-	referralInput = new QLineEdit();
+	referralInput = new QLineEdit("Referral");
 	inputlhs->addRow(tr("&Referral:"),referralInput);
-	brokerInput = new QLineEdit();
+	brokerInput = new QLineEdit("Broker");
 	inputlhs->addRow(tr("&Broker"),brokerInput);
-	officeInput = new QLineEdit();
+	officeInput = new QLineEdit("Office");
 	inputlhs->addRow(tr("&Office"),officeInput);
-	ssnInput = new QLineEdit();
+	ssnInput = new QLineEdit("SSN");
 	inputlhs->addRow(tr("&SSN:"),ssnInput);
-	income = new QLineEdit();
+	income = new QLineEdit("Income");
 	inputlhs->addRow(tr("&Monthly Income:"),income);
-	dob = new QLineEdit();
+	dob = new QLineEdit("DOB");
 	inputlhs->addRow(tr("&DOB:"),dob);
 	
 	ethnicity = new QComboBox();
@@ -426,7 +428,7 @@ void MainWindow::showPopup()
 	gender->addItem("Male");
 	gender->addItem("Female");
 	inputlhs->addRow(gender);
-	occupation = new QLineEdit();
+	occupation = new QLineEdit("Occupation");
 	inputlhs->addRow(tr("&Occupation:"),occupation);
 	input1->addLayout(inputlhs);
 	inputLayout->addLayout(input1);
@@ -506,8 +508,8 @@ void MainWindow::changeSave()
 	string dobS = dob->text().toStdString();
 	string officeS = officeInput->text().toStdString();
 	//ethnicity = new QComboBox();
-	string ethnicityS;
-	if (ethnicity->currentIndex() == 0)
+	//string ethnicityS=ethnicityQLineEdit->text().toStdString();
+	/*if (ethnicity->currentIndex() == 0)
 	{
 		ethnicityS = "Asian";
 	}
@@ -526,16 +528,16 @@ void MainWindow::changeSave()
 	else if (ethnicity->currentIndex() == 4)
 	{
 		ethnicityS = "White";
-	}
-	string genderS;
-	if (gender->currentIndex() == 0)
+	}*/
+	//string genderS=genderQLineEdit->text().toStdString();
+	/*if (gender->currentIndex() == 0)
 	{
 		genderS = "Male";
 	}
 	else if (gender->currentIndex() == 1)
 	{
 		genderS = "Female";
-	}
+	}*/
 	cout << "ohhh lala" << endl;
 	string occupationS = occupation->text().toStdString();	
 	string makeS = makeInput->text().toStdString();
@@ -547,20 +549,14 @@ void MainWindow::changeSave()
 	string navigationS = navigation->text().toStdString();
 	string CameraS = RCamera->text().toStdString();
 	string featureS = featureInput->text().toStdString();
-	map<string,user>::iterator it;
-	for (it=db.users.begin(); it!=db.users.end();++it)
-	{
-		if (db.users.find(nameS)!=db.users.end())
-		{
-			break;
-		}
-	}
-	cout << "find user " << endl;
-	user temp =it->second;
+	
+	user temp =db.users[saveKey];
+	cout<<temp.displayString()<<endl;
 	
 	temp._cell = cellS;
 	temp._other = cell2S;
 	int lastloc=0;
+	temp._address.clear();
 	for(int i=0;i<(int)addressInputS.size();i++)
 	{
 		if (addressInputS[i]=='*')
@@ -571,12 +567,13 @@ void MainWindow::changeSave()
 
 		}		
 	}
+	temp._address.push_back(addressInputS.substr(lastloc,addressInputS.size()-lastloc));
 	cout << "after address " << endl;
 	QDate selectedDate = editC->selectedDate();
-	QString selectedDateQS = selectedDate.toString(Qt::TextDate); 
+	QString selectedDateQS = selectedDate.toString("yyyy.MM.dd"); 
 	string selectedDateS = selectedDateQS.toStdString();
-	temp._date = selectedDateS;
-	temp._address.push_back(addressInputS.substr(lastloc,addressInputS.size()-lastloc));
+	temp._date=selectedDateS;
+	
 	temp._email=emailS;
 	temp._Referral=referralS;
 	temp._Broker=brokerS;
@@ -584,9 +581,11 @@ void MainWindow::changeSave()
 	temp._SSN=ssnS;
 	temp._MonthlyIncome=incomeS;
 	temp._DOB=dobS;
-	temp._Ethnicity=ethnicityS;
-	temp._Gender=genderS;
+	//temp._Ethnicity=ethnicityS;
+	//temp._Gender=genderS;
 	temp._Occupation=occupationS;
+	db.users[saveKey]=temp;
+	//db.replaceUser(temp);
 }
 
 void MainWindow::saveInput()
@@ -659,10 +658,13 @@ void MainWindow::saveInput()
 		purposeS = "Leasing";
 	}
 	string commentS = commentInput->toPlainText().toStdString();
+	QDate presentDate=QDate::currentDate();
+	QString presentDateQS=presentDate.toString("yyyy.MM.dd");
+	string presentDateS=presentDateQS.toStdString();
 	QDate selectedDate = editC->selectedDate();
-	QString selectedDateQS = selectedDate.toString(Qt::TextDate); 
+	QString selectedDateQS = selectedDate.toString("yyyy.MM.dd"); 
 	string selectedDateS = selectedDateQS.toStdString();
-	user newUser(nameS,selectedDateS,cellS,cell2S,addressInputS);
+	user newUser(nameS,presentDateS,cellS,cell2S,addressInputS);
 	cout << "what's wrong " << endl;
 	newUser._email=emailS;
 	newUser._Referral=referralS;
@@ -674,7 +676,8 @@ void MainWindow::saveInput()
 	newUser._Ethnicity=ethnicityS;
 	newUser._Gender=genderS;
 	newUser._Occupation=occupationS;
-	db.addUser(newUser);
+	newUser._callBackDate=selectedDateS;
+	
 	//initialize car
 	car addCar(makeS,color1S,color2S,yearS);
 	addCar._MRSP=mrspS;
@@ -686,6 +689,7 @@ void MainWindow::saveInput()
 	newUser._callHistoryNum=1;
 	//callHistory callH(selectedDateS,addCar,purposeS,commentS);
 	//newUser._callHistory.push_back(callH);
+	db.addUser(newUser);
 	saveSuccess();
 }
 
