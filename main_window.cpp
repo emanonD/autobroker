@@ -3,7 +3,7 @@
 #include "globals.h"
 #include <sstream>
 #include <iostream>
-
+#include "dbase/user.h"
 using namespace std;
 dbase db;
 
@@ -435,23 +435,23 @@ void MainWindow::showPopup()
 
 	
 
-	makeInput = new QLineEdit();
+	makeInput = new QLineEdit("Make");
 	inputrhs->addRow(tr("&Make:"),makeInput);
-	colorInput2 = new QLineEdit();
+	colorInput2 = new QLineEdit("exteriro");
 	inputrhs->addRow(tr("&Exterior Color:"),colorInput2);
-	colorInput = new QLineEdit();
+	colorInput = new QLineEdit("Interior");
 	inputrhs->addRow(tr("&Interior Color:"),colorInput);
-	yearInput = new QLineEdit();
+	yearInput = new QLineEdit("Year");
 	inputrhs->addRow(tr("&Year:"),yearInput);
-	mrsp = new QLineEdit();
+	mrsp = new QLineEdit("MSRP");
 	inputrhs->addRow(tr("&M.R.S.P:"),mrsp);
-	valueInput = new QLineEdit();
+	valueInput = new QLineEdit("value");
 	inputrhs->addRow(tr("&Current Value:"),valueInput);	
-	navigation = new QLineEdit();
+	navigation = new QLineEdit("Navigation");
 	inputrhs->addRow(tr("&Navigation:"),navigation);
-	RCamera = new QLineEdit();
+	RCamera = new QLineEdit("RearCamera");
 	inputrhs->addRow(tr("&Rear Camera:"),RCamera);
-	featureInput = new QLineEdit();
+	featureInput = new QLineEdit("Feature");
 	inputrhs->addRow(tr("&Additional Features:"),featureInput);
 	QLabel* addition = new QLabel("Additional Information:");
 	inputrhs->addRow(addition);
@@ -468,7 +468,7 @@ void MainWindow::showPopup()
 
 
 	QLabel* Comment = new QLabel("Comments:");
-	commentInput = new QTextEdit();
+	commentInput = new QTextEdit("Comments");
 	input2->addLayout(inputrhs);
 	input2->addWidget(purposeLabel);
 	input2->addWidget(purpose);
@@ -677,7 +677,8 @@ void MainWindow::saveInput()
 	newUser._Gender=genderS;
 	newUser._Occupation=occupationS;
 	newUser._callBackDate=selectedDateS;
-	
+	newUser.haveCar=true;
+
 	//initialize car
 	car addCar(makeS,color1S,color2S,yearS);
 	addCar._MRSP=mrspS;
@@ -686,9 +687,14 @@ void MainWindow::saveInput()
 	addCar._rearCamera=CameraS;
 	addCar._feature=featureS;
 	//add call history
-	newUser._callHistoryNum=1;
-	//callHistory callH(selectedDateS,addCar,purposeS,commentS);
+	newUser._car=addCar;
+	for (int i=0;i<(int)commentS.size();i++)
+		if (commentS[i]==' ')
+			commentS[i]='*';
+	
+	newUser.generateCallHistory(selectedDateS,addCar,purposeS,commentS);
 	//newUser._callHistory.push_back(callH);
+	//newUser._callHistoryNum=newUser._callHistory.size();
 	db.addUser(newUser);
 	saveSuccess();
 }
