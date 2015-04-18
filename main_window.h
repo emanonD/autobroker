@@ -20,7 +20,7 @@
 #include <vector>
 #include <map>
 #include <fstream>
-#include "dbase/msort.h"
+//#include "dbase/msort.h"
 #include "dbase/dbase.h"
 #include "dbase/user.h"
 #include "dbase/car.h"
@@ -37,7 +37,7 @@ public:
 	~MainWindow();
 
 private slots:
-	
+	void setToDate();
 	void choice();
 	void selectFile();
 	void viewPopup();
@@ -49,10 +49,21 @@ private slots:
 	void detailsPopup();
 	void cancelCHPopup();
 	void cancelPopup();
-	
+	void uploadP();
+	void uploadF();
+	void addCallPopup();
+	void seeDetails(int index);
+	void saveDPopup();
 private:
 	//dbase db();
 	vector<user> userR;
+	vector<QString> _keepImages;
+	vector<QString> _keepFiles;
+	vector<QImage*> addressKeep;
+	QDate selectedDate;
+	QCalendarWidget* planC;
+	QString selectedDateQS;
+	QLabel* fileContainer;
 	QHBoxLayout* overallLayout;
 	QVBoxLayout* lhsLayout;
 	QVBoxLayout* buttonLayout;
@@ -94,6 +105,7 @@ private:
 	QLineEdit* valueInput;
 	QLineEdit* featureInput;
 	QComboBox* gender;
+	QDialog* popWindow;
 	QLabel* genderLabel;
 	QLineEdit* income;
 	QLineEdit* dateinput;
@@ -112,13 +124,33 @@ private:
 	QLineEdit* navigation;
 	QLineEdit* RCamera;
 	QComboBox* purpose;
-	QDialog* popWindow;
+	QDialog* popWindows;
 	QListWidget* listHistory;
 	QDialog* window;
 	string saveKey;
+	QListWidget* showAddressF;
+	QDialog* addCallWindow;
+
+
+	QLineEdit* makeInputC;
+	QLineEdit* colorInput2C;
+	QComboBox* purposeC;
+	QCalendarWidget* editCC;
+	QLineEdit* colorInputC;
+	QLineEdit* yearInputC;
+	
+	QLineEdit* mrspC;
+	
+	QLineEdit* valueInputC;
+	
+	QLineEdit* navigationC;
+	QLineEdit* RCameraC;
+	QLineEdit* featureInputC;
+	
 	//void viewPopup();
 	vector<QImage*> Images;
 	QLabel* ImageContainer;
+	QListWidget* showAddress;
 	void showPopup();
 	void exportPopup();
 	void searchPopup();
@@ -127,5 +159,7 @@ private:
 	void sortD(vector<user> r);
 	void saveSuccess();
 	void planPopup();
+	void changeSuccess();
+	void successmsg();
 
 };
