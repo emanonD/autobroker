@@ -54,6 +54,7 @@ private slots:
 	void addCallPopup();
 	void seeDetails(int index);
 	void saveDPopup();
+	void reminder();
 private:
 	//dbase db();
 	vector<user> userR;
@@ -88,6 +89,7 @@ private:
 	QPushButton* ok1Button; 
 	QPushButton* callButton;
 	QPushButton* inputData;
+	
 	QLineEdit* email;
 	QLineEdit* dob;
 	QLabel* welcome;

@@ -83,19 +83,63 @@ MainWindow::MainWindow()
 }
 
 MainWindow::~MainWindow()
-{
-	
+{	
 }
+void MainWindow::reminder()
+{
+    QDialog reminderWindow;
+    QVBoxLayout* overallLayout = new QVBoxLayout();
+    reminderWindow.setWindowTitle("Reminder");
+    QListWidget* reminderList = new QListWidget();
+    //Need further work
+    overallLayout->addWidget(reminderList);
+    reminderList->addItem("Today:");
+    QString presentDateQS4=QDate::currentDate().toString("yyyy.MM.dd");
+	string qdate = presentDateQS4.toStdString();
+	cout << db.findDate(qdate).size() << " size" << endl;
+	for (unsigned int i=0; i<db.findDate(qdate).size(); i++)
+	{
+		string display = db.findDate(qdate)[i].displayString();
+		cout << display << endl;
+		reminderList->addItem(QString::fromStdString(display));
+	}
+	reminderList->addItem("Tomorrow:");
+	presentDateQS4=QDate::currentDate().addDays(1).toString("yyyy.MM.dd");
+	qdate = presentDateQS4.toStdString();
+	cout << db.findDate(qdate).size() << " size" << endl;
+	for (unsigned int i=0; i<db.findDate(qdate).size(); i++)
+	{
+		string display = db.findDate(qdate)[i].displayString();
+		cout << display << endl;
+		reminderList->addItem(QString::fromStdString(display));
+	}
+	reminderList->addItem("This Week:");
+	for(int i=2;i<9;i++)
+	{
+		presentDateQS4=QDate::currentDate().addDays(i).toString("yyyy.MM.dd");
+	qdate = presentDateQS4.toStdString();
+	cout << db.findDate(qdate).size() << " size" << endl;
+	for (unsigned int i=0; i<db.findDate(qdate).size(); i++)
+	{
+		string display = db.findDate(qdate)[i].displayString();
+		cout << display << endl;
+		reminderList->addItem(QString::fromStdString(display));
+	}
+}
+    QPushButton* select = new QPushButton("Select");
+    connect(select, SIGNAL(clicked()), this, SLOT(editUser()));
+    reminderWindow.setLayout(overallLayout);
+    reminderWindow.exec();
 
-
+}
 void MainWindow::selectFile()
 {
 	QString fileName = QFileDialog::getOpenFileName(this,tr("Open File"),"Home://","All files (*.*);;Text File(*.txt)");
 	QMessageBox::information(this,tr("File name"),fileName);
 	std::string name = fileName.QString::toStdString();
 	db.parse(name);
+	reminder();
 }
-
 void MainWindow::choice()
 {
 	if (searchFile->isChecked())
@@ -115,7 +159,6 @@ void MainWindow::choice()
 		planPopup();
 	}
 }
-
 void MainWindow::planPopup()
 {
 	QDialog planWindow;
@@ -157,7 +200,6 @@ void MainWindow::viewSpecific()
 	specific.setLayout(overallLayout);
 	specific.exec();
 }
-
 //view profile, search, call history
 void MainWindow::searchPopup()
 {
@@ -203,7 +245,6 @@ void MainWindow::searchPopup()
 	viewWindow.setLayout(lhsLayout);
 	viewWindow.exec();
 }
-
 void MainWindow::callHistory()
 {
 	historyWindow = new QDialog;
@@ -245,7 +286,6 @@ void MainWindow::callHistory()
 	historyWindow->setLayout(overallLayout);
 	historyWindow->exec();
 }
-
 void MainWindow::addCallPopup()
 {
 	addCallWindow = new QDialog();
@@ -294,9 +334,7 @@ void MainWindow::addCallPopup()
 	overallLayout->addLayout(additionalLayout);
 	addCallWindow->setLayout(overallLayout);
 	addCallWindow->exec();
-
 }
-
 void MainWindow::saveDPopup()
 {
 	string makeSD = makeInputC->text().toStdString();
@@ -335,12 +373,13 @@ void MainWindow::saveDPopup()
 			commentSD[i]='*';
 	addCar.check();
 	temp->generateCallHistory(selectedDateSD,addCar,purposeSD,commentSD);
+
+		listHistory->addItem(selectedDateQS2D);
 	db.users[temp->_key]=*temp;
 	//newUser._callHistory.push_back(callH);
 	//newUser._callHistoryNum=newUser._callHistory.size();
 	successmsg();
 }
-
 void MainWindow::successmsg()
 {
 	addCallWindow->close();
@@ -350,12 +389,10 @@ void MainWindow::successmsg()
 	msgBox->setStandardButtons(QMessageBox::Cancel);
 	msgBox->exec();	
 }
-
 void MainWindow::cancelCHPopup()
 {
 	historyWindow->close();
 }
-
 void MainWindow::detailsPopup()
 {
 	window = new QDialog;
@@ -379,12 +416,10 @@ void MainWindow::detailsPopup()
 	window->setLayout(overallLayout);
 	window->exec();
 }
-
 void MainWindow::cancelPopup()
 {
 	window->close();
 }
-
 void MainWindow::editUser()
 {
 	popWindows = new QDialog();
@@ -406,9 +441,7 @@ void MainWindow::editUser()
 	for (unsigned int i=0; i<tempN.size(); i++)
 	{
 		nameInput1 = nameInput1+" "+tempN[i];
-		
 	}
-	
 	nameInput= new QLineEdit(QString::fromStdString(nameInput1));
 	dateinput= new QLineEdit(QString::fromStdString(temp._date));
 	cout << "set place..."	<< endl;
@@ -423,7 +456,6 @@ void MainWindow::editUser()
 		cout << addressInput1;
 	}
 	cout << endl;
-
 	addressInput= new QLineEdit(QString::fromStdString(addressInput1));
 	referralInput= new QLineEdit(QString::fromStdString(temp._Referral));
 	brokerInput= new QLineEdit(QString::fromStdString(temp._Broker));
@@ -434,19 +466,13 @@ void MainWindow::editUser()
 	//ethnicity->setPalceholderText(QString::fromStdString(temp._Ethnicity));
 	//gender->setPlaceholderText(QString::fromStdString(temp._Gender));
 	occupation= new QLineEdit(QString::fromStdString(temp._Occupation));
-
-	
-
-
 	title1Label = new QLabel("Customer Profile");
 	labelLayout ->addWidget(title1Label);
 	title2Label = new QLabel("Current Car Info(Use for trade-in)");
 	labelLayout->addWidget(title2Label);
 	overallLayout->addLayout(labelLayout);
-	//inputlhs->addRow(tr("&Customer Profile"),title1Label);
-	
+	//inputlhs->addRow(tr("&Customer Profile"),title1Label);	
 	cout << 1 << endl;
-
 	inputlhs->addRow(tr("&Name:"),nameInput);		
 	inputlhs->addRow(tr("&Date:"),dateinput);	
 	inputlhs->addRow(tr("&Cell #:"),cellInput);	
@@ -484,7 +510,7 @@ void MainWindow::editUser()
 	inputrhs->addRow(tr("&Navigation:"),navigation);	
 	inputrhs->addRow(tr("&Rear Camera:"),RCamera);	
 	inputrhs->addRow(tr("&Additional Features:"),featureInput);
-	QCalendarWidget* editC = new QCalendarWidget;
+	editC = new QCalendarWidget;
 	editC->setGridVisible(true);
 	QDate selectedDate1 = editC->selectedDate();
 	QString selectedDateQS1 = selectedDate1.toString(Qt::TextDate); 
@@ -512,10 +538,7 @@ void MainWindow::editUser()
 	overallLayout->addWidget(saveButton);
 	popWindows->setLayout(overallLayout);
 	popWindows->exec();
-
 }
-
-
 void MainWindow::uploadP()
 {
 	QString fileName = QFileDialog::getOpenFileName(this,tr("Open File"),"Home://","PNG files(*.png);;JPG files(*.jpg)");
@@ -525,22 +548,17 @@ void MainWindow::uploadP()
 	newImage->load(fileName);
 	addressKeep.push_back(newImage);
 	cout << "upload success " << endl;
-
 }
-
 void MainWindow::sortN(vector<user> r)
 {
 	ObjN objN;
 	mergeSort(r,objN);
 }
-
 void MainWindow::sortD(vector<user> r)
 {	
 	ObjD objD;
 	mergeSort(r,objD);
-
 }
-
 void MainWindow::viewPopup()
 {
 	string search = searchInput->text().toStdString();
@@ -572,7 +590,6 @@ void MainWindow::viewPopup()
 		profileListWidget->addItem(qstr1);
 	}
 }
-
 //save to file window
 void MainWindow::exportPopup()
 {
@@ -582,24 +599,16 @@ void MainWindow::exportPopup()
 	ofstream of(name.c_str());
 	db.dump(of);
 	of.close();
-	
-	
 }
-
-
 //function of ofile
 void MainWindow::ofile()
 {
 	
 	save->close();
 }
-
-
 void MainWindow::showPopup()
 {
-
 //TODO
-
 //add call back date QCalendar
 	popWindow = new QDialog;
 	popWindow->setWindowTitle("Input Data");
@@ -731,16 +740,13 @@ void MainWindow::showPopup()
 	overallLayout->addWidget(saveButton);
 	popWindow->setLayout(overallLayout);
 	popWindow->exec();
-
 }
-
 void MainWindow::uploadF()
 {
 	QString fileName = QFileDialog::getOpenFileName(this,tr("Open File"),"Home//","PDF files(*.pdf);;Text File(*.txt)");
 	_keepFiles.push_back(fileName);	
 	showAddressF->addItem(fileName);
 }
-
 void MainWindow::seeDetails(int index)
 {
 	if (index<0)
@@ -758,9 +764,7 @@ void MainWindow::seeDetails(int index)
 	detailFile->setLayout(overallLayout);
 	
 	detailFile->exec();
-
 }
-
 void MainWindow::changeSave()
 {
 	string nameS = nameInput->text().toStdString();
@@ -843,6 +847,7 @@ void MainWindow::changeSave()
 	QDate selectedDate2 = editC->selectedDate();
 	QString selectedDateQS2 = selectedDate2.toString("yyyy.MM.dd"); 
 	string selectedDateS2 = selectedDateQS2.toStdString();
+	//cout<<selectedDateS2<<endl;
 	temp._callBackDate=selectedDateS2;
 	
 	temp._email=emailS;
@@ -859,7 +864,6 @@ void MainWindow::changeSave()
 	//db.replaceUser(temp);
 	changeSuccess();
 }
-
 void MainWindow::changeSuccess()
 {
 	popWindows->close();
@@ -868,10 +872,7 @@ void MainWindow::changeSuccess()
 	msgBox->setText("Your change has been successfully saved!");
 	msgBox->setStandardButtons(QMessageBox::Cancel);
 	msgBox->exec();	
-
-
 }
-
 void MainWindow::saveInput()
 {
 	string nameS = nameInput->text().toStdString();
@@ -990,7 +991,6 @@ void MainWindow::saveInput()
 	db.addUser(newUser);
 	saveSuccess();
 }
-
 void MainWindow::saveSuccess()
 {
 	popWindow->close();
@@ -1000,4 +1000,3 @@ void MainWindow::saveSuccess()
 	msgBox->setStandardButtons(QMessageBox::Cancel);
 	msgBox->exec();	
 }
-
