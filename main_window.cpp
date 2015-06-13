@@ -172,13 +172,45 @@ void MainWindow::planPopup()
 	connect(planC,SIGNAL(selectionChanged()),this,SLOT(setToDate()));
 	QPushButton* selectD = new QPushButton("Select date");
 	connect(selectD, SIGNAL(clicked()), this, SLOT(viewSpecific()));
+	QPushButton* viewMonth=new QPushButton("view Month");
+	connect(viewMonth,SIGNAL(clicked()),this,SLOT(viewMonth()));
 	overallLayout->addWidget(selectD);
+	overallLayout->addWidget(viewMonth);
 	planWindow.setLayout(overallLayout);
 	planWindow.exec();
+	saveToBackup();
 }
 void MainWindow::setToDate()
 {
 	selectedDate=planC->selectedDate();
+}
+void MainWindow::viewMonth()
+{
+	QDialog specific;
+	QVBoxLayout* overallLayout = new QVBoxLayout;
+	QListWidget* listSpecific = new QListWidget;
+	int month=selectedDate.month();
+	int year=selectedDate.year();
+	int days=selectedDate.daysInMonth();
+	for(int i=0;i<days;i++)
+	{
+		QDate newDate(year,month,i);
+	//selectedDate = planC->slectedDate();
+	QString presentDateQS4=newDate.toString("yyyy.MM.dd");
+	string qdate = presentDateQS4.toStdString();
+	cout << "qdate " << qdate << endl;
+	cout << db.findDate(qdate).size() << " size" << endl;
+	for (unsigned int i=0; i<db.findDate(qdate).size(); i++)
+	{
+		string display = db.findDate(qdate)[i].displayString();
+		cout << display << endl;
+		listSpecific->addItem(QString::fromStdString(display));
+	}
+	}
+	overallLayout->addWidget(listSpecific);
+	specific.setLayout(overallLayout);
+	specific.exec();
+	saveToBackup();
 }
 void MainWindow::viewSpecific()
 {
@@ -199,6 +231,7 @@ void MainWindow::viewSpecific()
 	overallLayout->addWidget(listSpecific);
 	specific.setLayout(overallLayout);
 	specific.exec();
+	saveToBackup();
 }
 //view profile, search, call history
 void MainWindow::searchPopup()
@@ -285,6 +318,7 @@ void MainWindow::callHistory()
 	overallLayout->addLayout(buttons);
 	historyWindow->setLayout(overallLayout);
 	historyWindow->exec();
+	saveToBackup();
 }
 void MainWindow::addCallPopup()
 {
@@ -334,6 +368,7 @@ void MainWindow::addCallPopup()
 	overallLayout->addLayout(additionalLayout);
 	addCallWindow->setLayout(overallLayout);
 	addCallWindow->exec();
+	saveToBackup();
 }
 void MainWindow::saveDPopup()
 {
@@ -388,6 +423,7 @@ void MainWindow::successmsg()
 	msgBox->setText("Your input has been successfully saved!");
 	msgBox->setStandardButtons(QMessageBox::Cancel);
 	msgBox->exec();	
+	saveToBackup();
 }
 void MainWindow::cancelCHPopup()
 {
@@ -415,6 +451,7 @@ void MainWindow::detailsPopup()
 	overallLayout->addWidget(cancel);
 	window->setLayout(overallLayout);
 	window->exec();
+	saveToBackup();
 }
 void MainWindow::cancelPopup()
 {
@@ -548,6 +585,7 @@ void MainWindow::uploadP()
 	newImage->load(fileName);
 	addressKeep.push_back(newImage);
 	cout << "upload success " << endl;
+	saveToBackup();
 }
 void MainWindow::sortN(vector<user> r)
 {
@@ -746,6 +784,7 @@ void MainWindow::uploadF()
 	QString fileName = QFileDialog::getOpenFileName(this,tr("Open File"),"Home//","PDF files(*.pdf);;Text File(*.txt)");
 	_keepFiles.push_back(fileName);	
 	showAddressF->addItem(fileName);
+	saveToBackup();
 }
 void MainWindow::seeDetails(int index)
 {
@@ -764,6 +803,7 @@ void MainWindow::seeDetails(int index)
 	detailFile->setLayout(overallLayout);
 	
 	detailFile->exec();
+
 }
 void MainWindow::changeSave()
 {
@@ -872,6 +912,7 @@ void MainWindow::changeSuccess()
 	msgBox->setText("Your change has been successfully saved!");
 	msgBox->setStandardButtons(QMessageBox::Cancel);
 	msgBox->exec();	
+	saveToBackup();
 }
 void MainWindow::saveInput()
 {
@@ -999,4 +1040,11 @@ void MainWindow::saveSuccess()
 	msgBox->setText("Your input has been successfully saved!");
 	msgBox->setStandardButtons(QMessageBox::Cancel);
 	msgBox->exec();	
+	saveToBackup();
+}
+void MainWindow::saveToBackup()
+{
+	ofstream of("backup.out");
+	db.dump(of);
+	of.close();
 }

@@ -37,6 +37,7 @@ public:
 	~MainWindow();
 
 private slots:
+void viewMonth();
 	void setToDate();
 	void choice();
 	void selectFile();
@@ -163,5 +164,6 @@ private:
 	void planPopup();
 	void changeSuccess();
 	void successmsg();
+	void saveToBackup();
 
 };
