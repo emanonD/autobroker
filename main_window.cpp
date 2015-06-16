@@ -44,7 +44,7 @@ struct ObjD
 
 MainWindow::MainWindow()
 {
-
+selectFile();
 	
 	// Title
 	setWindowTitle("Welcome to Autobroker Database!");
@@ -62,12 +62,12 @@ MainWindow::MainWindow()
 	buttonLayout = new QVBoxLayout;
 	inputData = new QPushButton("Select the Database");
 	connect(inputData, SIGNAL(clicked()), this, SLOT(selectFile()));
-	buttonLayout->addWidget(inputData);
+	//buttonLayout->addWidget(inputData);
 	select = new QLabel("Please select from the following:") ;
 	buttonLayout->addWidget(select);
 	searchFile = new QRadioButton("Search existing profile");
 	inputFile = new QRadioButton("Input new profile");
-	exportFile = new QRadioButton("Output to file");
+//	exportFile = new QRadioButton("Output to file");
 	viewPlan = new QRadioButton("Review Monthly Plan");
 	ok1Button = new QPushButton("OK");
 	connect(ok1Button, SIGNAL(clicked()), this, SLOT(choice()));
@@ -77,7 +77,7 @@ MainWindow::MainWindow()
 	buttonLayout->addWidget(searchFile);
 	buttonLayout->addWidget(inputFile);	
 	buttonLayout->addWidget(viewPlan);
-	buttonLayout->addWidget(exportFile);
+	//buttonLayout->addWidget(exportFile);
 	buttonLayout->addWidget(ok1Button);
 	setLayout(buttonLayout);
 }
@@ -90,7 +90,7 @@ void MainWindow::reminder()
     QDialog reminderWindow;
     QVBoxLayout* overallLayout = new QVBoxLayout();
     reminderWindow.setWindowTitle("Reminder");
-    QListWidget* reminderList = new QListWidget();
+    QListWidget* reminderList = new QListWidget(0);
     //Need further work
     overallLayout->addWidget(reminderList);
     reminderList->addItem("Today:");
@@ -103,7 +103,10 @@ void MainWindow::reminder()
 		cout << display << endl;
 		reminderList->addItem(QString::fromStdString(display));
 	}
-	reminderList->addItem("Tomorrow:");
+	QLabel* tmrLabel=new QLabel("Tomorrow:");
+	QListWidget* tmrList = new QListWidget(0);
+	overallLayout->addWidget(tmrLabel);
+	overallLayout->addWidget(tmrList);
 	presentDateQS4=QDate::currentDate().addDays(1).toString("yyyy.MM.dd");
 	qdate = presentDateQS4.toStdString();
 	cout << db.findDate(qdate).size() << " size" << endl;
@@ -111,9 +114,13 @@ void MainWindow::reminder()
 	{
 		string display = db.findDate(qdate)[i].displayString();
 		cout << display << endl;
-		reminderList->addItem(QString::fromStdString(display));
+		tmrList->addItem(QString::fromStdString(display));
 	}
-	reminderList->addItem("This Week:");
+	//reminderList->addItem("This Week:");
+	QLabel* weekLabel=new QLabel("This Week:");
+	QListWidget* weekList = new QListWidget(0);
+	overallLayout->addWidget(weekLabel);
+	overallLayout->addWidget(weekList);
 	for(int i=2;i<9;i++)
 	{
 		presentDateQS4=QDate::currentDate().addDays(i).toString("yyyy.MM.dd");
@@ -123,7 +130,7 @@ void MainWindow::reminder()
 	{
 		string display = db.findDate(qdate)[i].displayString();
 		cout << display << endl;
-		reminderList->addItem(QString::fromStdString(display));
+		weekList->addItem(QString::fromStdString(display));
 	}
 }
     QPushButton* select = new QPushButton("Select");
@@ -134,9 +141,7 @@ void MainWindow::reminder()
 }
 void MainWindow::selectFile()
 {
-	QString fileName = QFileDialog::getOpenFileName(this,tr("Open File"),"Home://","All files (*.*);;Text File(*.txt)");
-	QMessageBox::information(this,tr("File name"),fileName);
-	std::string name = fileName.QString::toStdString();
+	std::string name = "database.txt";
 	db.parse(name);
 	reminder();
 }
@@ -632,8 +637,8 @@ void MainWindow::viewPopup()
 void MainWindow::exportPopup()
 {
 
-	QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "Home//","All files (*.*);;Text File(*.txt)");
-	string name = fileName.toStdString();
+	
+	string name = "database.txt";
 	ofstream of(name.c_str());
 	db.dump(of);
 	of.close();
@@ -921,6 +926,7 @@ void MainWindow::saveInput()
 		if (nameS[i]==' ') nameS[i]='*';
 	
 	string cellS = cellInput->text().toStdString();
+
 	string cell2S = cellInput2->text().toStdString();
 	string emailS = email->text().toStdString();
 	string addressInputS = addressInput->text().toStdString();
@@ -1044,7 +1050,7 @@ void MainWindow::saveSuccess()
 }
 void MainWindow::saveToBackup()
 {
-	ofstream of("backup.out");
+	ofstream of("database.txt");
 	db.dump(of);
 	of.close();
 }
