@@ -44,33 +44,22 @@ struct ObjD
 
 MainWindow::MainWindow()
 {
-selectFile();
+//selectFile();
 	
 	// Title
 	setWindowTitle("Welcome to Autobroker Database!");
 	overallLayout = new QHBoxLayout;
-	lhsLayout = new QVBoxLayout;
+	buttonLayout= new QVBoxLayout;
 	
-	search = new QLabel("Search customer profile:");
-	lhsLayout->addWidget(search);
-	searchInput = new QLineEdit();
-	lhsLayout->addWidget(searchInput);
-	viewFile = new QPushButton("Search");
-	connect(viewFile, SIGNAL(clicked()), this, SLOT(viewPopup()));
-	lhsLayout->addWidget(viewFile);
-	overallLayout->addLayout(lhsLayout);
-	buttonLayout = new QVBoxLayout;
-	inputData = new QPushButton("Select the Database");
-	connect(inputData, SIGNAL(clicked()), this, SLOT(selectFile()));
+	
 	//buttonLayout->addWidget(inputData);
 	select = new QLabel("Please select from the following:") ;
 	buttonLayout->addWidget(select);
-	searchFile = new QRadioButton("Search existing profile");
-	inputFile = new QRadioButton("Input new profile");
+	searchFile = new QPushButton("Search existing profile");
+	inputFile = new QPushButton("Add New Lead");
 //	exportFile = new QRadioButton("Output to file");
-	viewPlan = new QRadioButton("Review Monthly Plan");
-	ok1Button = new QPushButton("OK");
-	connect(ok1Button, SIGNAL(clicked()), this, SLOT(choice()));
+	viewPlan = new QPushButton("Review Monthly Plan");
+	connect(inputFile, SIGNAL(clicked()), this, SLOT(showPopup()));
 
 	buttonLayout->addWidget(select);
 
@@ -78,7 +67,6 @@ selectFile();
 	buttonLayout->addWidget(inputFile);	
 	buttonLayout->addWidget(viewPlan);
 	//buttonLayout->addWidget(exportFile);
-	buttonLayout->addWidget(ok1Button);
 	setLayout(buttonLayout);
 }
 
@@ -145,7 +133,7 @@ void MainWindow::selectFile()
 	db.parse(name);
 	reminder();
 }
-void MainWindow::choice()
+/*void MainWindow::choice()
 {
 	if (searchFile->isChecked())
 	{
@@ -163,7 +151,7 @@ void MainWindow::choice()
 	{
 		planPopup();
 	}
-}
+}*/
 void MainWindow::planPopup()
 {
 	QDialog planWindow;
@@ -283,7 +271,7 @@ void MainWindow::searchPopup()
 	viewWindow.setLayout(lhsLayout);
 	viewWindow.exec();
 }
-void MainWindow::callHistory()
+/*void MainWindow::callHistory()
 {
 	historyWindow = new QDialog;
 	QVBoxLayout* overallLayout = new QVBoxLayout;
@@ -324,8 +312,8 @@ void MainWindow::callHistory()
 	historyWindow->setLayout(overallLayout);
 	historyWindow->exec();
 	saveToBackup();
-}
-void MainWindow::addCallPopup()
+}*/
+/*void MainWindow::addCallPopup()
 {
 	addCallWindow = new QDialog();
 	QVBoxLayout* overallLayout = new QVBoxLayout;
@@ -374,7 +362,7 @@ void MainWindow::addCallPopup()
 	addCallWindow->setLayout(overallLayout);
 	addCallWindow->exec();
 	saveToBackup();
-}
+}*/
 void MainWindow::saveDPopup()
 {
 	string makeSD = makeInputC->text().toStdString();
@@ -654,47 +642,18 @@ void MainWindow::showPopup()
 //TODO
 //add call back date QCalendar
 	popWindow = new QDialog;
-	popWindow->setWindowTitle("Input Data");
+	popWindow->setWindowTitle("Add new Lead");
 	QVBoxLayout* overallLayout = new QVBoxLayout();
-	QHBoxLayout* inputLayout = new QHBoxLayout();
-	QHBoxLayout* labelLayout = new QHBoxLayout();
 	QFormLayout* inputlhs = new QFormLayout();
-	QVBoxLayout* input1 = new QVBoxLayout();
-	QFormLayout* inputrhs = new QFormLayout();
-	QVBoxLayout* input2 = new QVBoxLayout();
-
-
-	title1Label = new QLabel("Customer Profile");
-	labelLayout ->addWidget(title1Label);
-	title2Label = new QLabel("Current Car Info(Use for trade-in)");
-	labelLayout->addWidget(title2Label);
-	overallLayout->addLayout(labelLayout);
 	//inputlhs->addRow(tr("&Customer Profile"),title1Label);
 	//inputlhs->addRow(tr("&Customer Profile"),title1Label);
-	nameInput = new QLineEdit("");
-	inputlhs->addRow(tr("&Name:"),nameInput);	
-	cellInput = new QLineEdit("");
-	inputlhs->addRow(tr("&Cell #:"),cellInput);
-	cellInput2 = new QLineEdit("");
-	inputlhs->addRow(tr("&other #:"),cellInput2);	
-	email = new QLineEdit("");
-	addressInput = new QLineEdit("");
-	inputlhs->addRow(tr("&Email:"),email);
-	inputlhs->addRow(tr("&Address:"),addressInput);
-	referralInput = new QLineEdit("");
-	inputlhs->addRow(tr("&Referral:"),referralInput);
-	brokerInput = new QLineEdit("");
-	inputlhs->addRow(tr("&Broker"),brokerInput);
-	officeInput = new QLineEdit("");
-	inputlhs->addRow(tr("&Office"),officeInput);
-	ssnInput = new QLineEdit("");
-	inputlhs->addRow(tr("&SSN:"),ssnInput);
-	income = new QLineEdit("");
-	inputlhs->addRow(tr("&Monthly Income:"),income);
-	dob = new QLineEdit("");
-	inputlhs->addRow(tr("&DOB:"),dob);
-	
-	ethnicity = new QComboBox();
+	QLineEdit* nameInput = new QLineEdit("");
+	inputlhs->addRow(tr("&name:"),nameInput);	
+	QLineEdit* cellInput = new QLineEdit("");
+	inputlhs->addRow(tr("&cell:"),cellInput);
+	QLineEdit* email = new QLineEdit("");
+	inputlhs->addRow(tr("&email:"),email);		
+	/*ethnicity = new QComboBox();
 	ethnicityLabel = new QLabel("Ethnicity:");
 	inputlhs->addRow(ethnicityLabel);
 	ethnicity->addItem("Asian");
@@ -703,81 +662,42 @@ void MainWindow::showPopup()
 	ethnicity->addItem("Native Hawaiian or Other Pacific Islander");
 	ethnicity->addItem("White");
 	inputlhs->addRow(ethnicity);
-	
-
-	gender = new QComboBox();
-	genderLabel = new QLabel("Gender:");
-	inputlhs->addRow(genderLabel);
-	
-	//Choose the way of listing
-	gender->addItem("Male");
-	gender->addItem("Female");
-	inputlhs->addRow(gender);
-	occupation = new QLineEdit("");
-	inputlhs->addRow(tr("&Occupation:"),occupation);
-	input1->addLayout(inputlhs);
-	QPushButton* uploadPic = new QPushButton("Upload pictures");
-	connect(uploadPic, SIGNAL(clicked()), this, SLOT(uploadP()));
-	showAddress = new QListWidget();
-	connect(showAddress, SIGNAL(currentRowChanged(int)), this, SLOT(seeDetails(int)));
-	QPushButton* uploadFile = new QPushButton("Upload files");
-	connect(uploadFile, SIGNAL(clicked()), this, SLOT(uploadF()));
-	showAddressF = new QListWidget();
-	input1->addWidget(uploadPic);
-	input1->addWidget(showAddress);
-	input1->addWidget(uploadFile);
-	input1->addWidget(showAddressF);
-	inputLayout->addLayout(input1);
-
-	
-
+	*/
 	makeInput = new QLineEdit("");
-	inputrhs->addRow(tr("&Make:"),makeInput);
+	inputlhs->addRow(tr("&Make:"),makeInput);
 	colorInput2 = new QLineEdit("");
-	inputrhs->addRow(tr("&Exterior Color:"),colorInput2);
+	inputlhs->addRow(tr("&Exterior Color:"),colorInput2);
 	colorInput = new QLineEdit("");
-	inputrhs->addRow(tr("&Interior Color:"),colorInput);
+	inputlhs->addRow(tr("&Interior Color:"),colorInput);
 	yearInput = new QLineEdit("");
-	inputrhs->addRow(tr("&Year:"),yearInput);
+	inputlhs->addRow(tr("&Year:"),yearInput);
 	mrsp = new QLineEdit("");
-	inputrhs->addRow(tr("&M.R.S.P:"),mrsp);
+	inputlhs->addRow(tr("&Options:"),mrsp);
 	valueInput = new QLineEdit("");
-	inputrhs->addRow(tr("&Current Value:"),valueInput);	
-	navigation = new QLineEdit("");
-	inputrhs->addRow(tr("&Navigation:"),navigation);
-	RCamera = new QLineEdit("");
-	inputrhs->addRow(tr("&Rear Camera:"),RCamera);
-	featureInput = new QLineEdit("");
-	inputrhs->addRow(tr("&Additional Features:"),featureInput);
-	QLabel* addition = new QLabel(" Information:");
-	inputrhs->addRow(addition);
+	inputlhs->addRow(tr("&PriceQuoted:"),valueInput);	
+	overallLayout->addLayout(inputlhs);
 	purpose = new QComboBox();
-	QLabel* purposeLabel = new QLabel("Purpose of Calling:");
-	
+	QLabel* purposeLabel = new QLabel("Purpose:");
 	purpose->addItem("Purchasing");
 	purpose->addItem("Leasing");
 	QLabel* callDate = new QLabel("Select Date:");
 	editC = new QCalendarWidget;
-	editC->setGridVisible(true);
-	
+	editC->setGridVisible(true);	
 	//add to data structure
-
-
 	QLabel* Comment = new QLabel("Comments:");
 	commentInput = new QTextEdit();
-	input2->addLayout(inputrhs);
-	input2->addWidget(purposeLabel);
-	input2->addWidget(purpose);
-	input2->addWidget(callDate);
-	input2->addWidget(editC);
-	input2->addWidget(Comment);
-	input2->addWidget(commentInput);
-	inputLayout->addLayout(input2);
+	//input2->addLayout(inputrhs);
+	overallLayout->addWidget(purposeLabel);
+	overallLayout->addWidget(purpose);
+	overallLayout->addWidget(callDate);
+	overallLayout->addWidget(editC);
+	overallLayout->addWidget(Comment);
+	overallLayout->addWidget(commentInput);	
 	//inputLayout->addLayout(inputlhs);
 	/*inputLayout->addLayout(inputmhs);
 	inputLayout->addLayout(inputrhs);*/
-	overallLayout->addLayout(inputLayout);
-	
+	//overallLayout->addLayout(inputLayout);	
+
 	QPushButton* saveButton = new QPushButton("Save");
 	connect(saveButton, SIGNAL(clicked()), this, SLOT(saveInput()));
 	overallLayout->addWidget(saveButton);

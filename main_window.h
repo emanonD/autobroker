@@ -39,7 +39,7 @@ public:
 private slots:
 void viewMonth();
 	void setToDate();
-	void choice();
+	//void choice();
 	void selectFile();
 	void viewPopup();
 	void saveInput();
@@ -56,6 +56,7 @@ void viewMonth();
 	void seeDetails(int index);
 	void saveDPopup();
 	void reminder();
+	void showPopup();
 private:
 	//dbase db();
 	vector<user> userR;
@@ -83,10 +84,9 @@ private:
 	QPushButton* viewFile;
 	QListWidget* profileListWidget;
 	QLabel* select; 
-	QRadioButton* searchFile; 
-	QRadioButton* inputFile; 
-	QRadioButton* exportFile; 
-	QRadioButton* viewPlan;
+	QPushButton* searchFile; 
+	QPushButton* inputFile; 
+	QPushButton* viewPlan;
 	QPushButton* ok1Button; 
 	QPushButton* callButton;
 	QPushButton* inputData;
@@ -154,7 +154,7 @@ private:
 	vector<QImage*> Images;
 	QLabel* ImageContainer;
 	QListWidget* showAddress;
-	void showPopup();
+	
 	void exportPopup();
 	void searchPopup();
 	void ofile();
