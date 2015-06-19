@@ -22,7 +22,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      19,   14, // methods
+       5,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -31,37 +31,17 @@ static const uint qt_meta_data_MainWindow[] = {
 
  // slots: signature, parameters, type, tag, flags
       12,   11,   11,   11, 0x08,
-      24,   11,   11,   11, 0x08,
-      36,   11,   11,   11, 0x08,
+      25,   11,   11,   11, 0x08,
+      37,   11,   11,   11, 0x08,
       49,   11,   11,   11, 0x08,
-      61,   11,   11,   11, 0x08,
-      73,   11,   11,   11, 0x08,
-      84,   11,   11,   11, 0x08,
-      97,   11,   11,   11, 0x08,
-     111,   11,   11,   11, 0x08,
-     126,   11,   11,   11, 0x08,
-     141,   11,   11,   11, 0x08,
-     157,   11,   11,   11, 0x08,
-     171,   11,   11,   11, 0x08,
-     181,   11,   11,   11, 0x08,
-     191,   11,   11,   11, 0x08,
-     212,  206,   11,   11, 0x08,
-     228,   11,   11,   11, 0x08,
-     241,   11,   11,   11, 0x08,
-     252,   11,   11,   11, 0x08,
+      60,   11,   11,   11, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_MainWindow[] = {
-    "MainWindow\0\0viewMonth()\0setToDate()\0"
-    "selectFile()\0viewPopup()\0saveInput()\0"
-    "editUser()\0changeSave()\0callHistory()\0"
-    "viewSpecific()\0detailsPopup()\0"
-    "cancelCHPopup()\0cancelPopup()\0uploadP()\0"
-    "uploadF()\0addCallPopup()\0index\0"
-    "seeDetails(int)\0saveDPopup()\0reminder()\0"
-    "showPopup()\0"
+    "MainWindow\0\0selectFile()\0viewPopup()\0"
+    "saveInput()\0reminder()\0showPopup()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -70,28 +50,15 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         Q_ASSERT(staticMetaObject.cast(_o));
         MainWindow *_t = static_cast<MainWindow *>(_o);
         switch (_id) {
-        case 0: _t->viewMonth(); break;
-        case 1: _t->setToDate(); break;
-        case 2: _t->selectFile(); break;
-        case 3: _t->viewPopup(); break;
-        case 4: _t->saveInput(); break;
-        case 5: _t->editUser(); break;
-        case 6: _t->changeSave(); break;
-        case 7: _t->callHistory(); break;
-        case 8: _t->viewSpecific(); break;
-        case 9: _t->detailsPopup(); break;
-        case 10: _t->cancelCHPopup(); break;
-        case 11: _t->cancelPopup(); break;
-        case 12: _t->uploadP(); break;
-        case 13: _t->uploadF(); break;
-        case 14: _t->addCallPopup(); break;
-        case 15: _t->seeDetails((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 16: _t->saveDPopup(); break;
-        case 17: _t->reminder(); break;
-        case 18: _t->showPopup(); break;
+        case 0: _t->selectFile(); break;
+        case 1: _t->viewPopup(); break;
+        case 2: _t->saveInput(); break;
+        case 3: _t->reminder(); break;
+        case 4: _t->showPopup(); break;
         default: ;
         }
     }
+    Q_UNUSED(_a);
 }
 
 const QMetaObjectExtraData MainWindow::staticMetaObjectExtraData = {
@@ -126,9 +93,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 19)
+        if (_id < 5)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 19;
+        _id -= 5;
     }
     return _id;
 }

@@ -37,24 +37,22 @@ public:
 	~MainWindow();
 
 private slots:
-void viewMonth();
-	void setToDate();
+//void viewMonth();
+	//void setToDate();
 	//void choice();
 	void selectFile();
 	void viewPopup();
 	void saveInput();
-	void editUser();
-	void changeSave();
-	void callHistory();
-	void viewSpecific();
-	void detailsPopup();
-	void cancelCHPopup();
-	void cancelPopup();
-	void uploadP();
-	void uploadF();
-	void addCallPopup();
-	void seeDetails(int index);
-	void saveDPopup();
+	//void editUser();
+	//void changeSave();
+	//void callHistory();
+	//void viewSpecific();
+	//void detailsPopup();
+	//void cancelCHPopup();
+	//void cancelPopup();
+	//void addCallPopup();
+	//void seeDetails(int index);
+	//void saveDPopup();
 	void reminder();
 	void showPopup();
 private:
@@ -92,6 +90,9 @@ private:
 	QPushButton* inputData;
 	
 	QLineEdit* email;
+	QLineEdit* modelInput;
+	QLineEdit* msrpInput;
+	QLineEdit* optionsInput;
 	QLineEdit* dob;
 	QLabel* welcome;
 	QLabel* title1Label;
@@ -105,7 +106,7 @@ private:
 	QLabel* title2Label;
 	QLineEdit* makeInput;
 	QLineEdit* colorInput;
-	QLineEdit* valueInput;
+	QLineEdit* priceInput;
 	QLineEdit* featureInput;
 	QComboBox* gender;
 	QDialog* popWindow;

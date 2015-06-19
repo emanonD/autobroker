@@ -152,7 +152,7 @@ void MainWindow::selectFile()
 		planPopup();
 	}
 }*/
-void MainWindow::planPopup()
+/*void MainWindow::planPopup()
 {
 	QDialog planWindow;
 	QVBoxLayout* overallLayout = new QVBoxLayout;
@@ -363,7 +363,7 @@ void MainWindow::searchPopup()
 	addCallWindow->exec();
 	saveToBackup();
 }*/
-void MainWindow::saveDPopup()
+/*void MainWindow::saveDPopup()
 {
 	string makeSD = makeInputC->text().toStdString();
 	string color1SD = colorInput2C->text().toStdString();
@@ -422,7 +422,7 @@ void MainWindow::cancelCHPopup()
 {
 	historyWindow->close();
 }
-void MainWindow::detailsPopup()
+/*void MainWindow::detailsPopup()
 {
 	window = new QDialog;
 	window->setWindowTitle("View Details");
@@ -445,12 +445,13 @@ void MainWindow::detailsPopup()
 	window->setLayout(overallLayout);
 	window->exec();
 	saveToBackup();
-}
+}*/
+	/*
 void MainWindow::cancelPopup()
 {
 	window->close();
 }
-void MainWindow::editUser()
+/*void MainWindow::editUser()
 {
 	popWindows = new QDialog();
 	popWindows->setWindowTitle("Edit User");
@@ -555,7 +556,7 @@ void MainWindow::editUser()
 	/*inputLayout->addLayout(inputmhs);
 	inputLayout->addLayout(inputrhs);*/
 	
-	overallLayout->addLayout(inputLayout);
+	/*overallLayout->addLayout(inputLayout);
 	QHBoxLayout* button = new QHBoxLayout;
 	QPushButton* saveButton = new QPushButton("Save");
 	button->addWidget(saveButton);
@@ -568,8 +569,8 @@ void MainWindow::editUser()
 	overallLayout->addWidget(saveButton);
 	popWindows->setLayout(overallLayout);
 	popWindows->exec();
-}
-void MainWindow::uploadP()
+}*/
+/*void MainWindow::uploadP()
 {
 	QString fileName = QFileDialog::getOpenFileName(this,tr("Open File"),"Home://","PNG files(*.png);;JPG files(*.jpg)");
 	showAddress->addItem(fileName);
@@ -579,7 +580,7 @@ void MainWindow::uploadP()
 	addressKeep.push_back(newImage);
 	cout << "upload success " << endl;
 	saveToBackup();
-}
+}*/
 void MainWindow::sortN(vector<user> r)
 {
 	ObjN objN;
@@ -624,8 +625,6 @@ void MainWindow::viewPopup()
 //save to file window
 void MainWindow::exportPopup()
 {
-
-	
 	string name = "database.txt";
 	ofstream of(name.c_str());
 	db.dump(of);
@@ -634,47 +633,36 @@ void MainWindow::exportPopup()
 //function of ofile
 void MainWindow::ofile()
 {
-	
 	save->close();
 }
 void MainWindow::showPopup()
 {
-//TODO
-//add call back date QCalendar
 	popWindow = new QDialog;
 	popWindow->setWindowTitle("Add new Lead");
 	QVBoxLayout* overallLayout = new QVBoxLayout();
 	QFormLayout* inputlhs = new QFormLayout();
-	//inputlhs->addRow(tr("&Customer Profile"),title1Label);
-	//inputlhs->addRow(tr("&Customer Profile"),title1Label);
-	QLineEdit* nameInput = new QLineEdit("");
+	 nameInput = new QLineEdit("");
 	inputlhs->addRow(tr("&name:"),nameInput);	
-	QLineEdit* cellInput = new QLineEdit("");
+	 cellInput = new QLineEdit("");
 	inputlhs->addRow(tr("&cell:"),cellInput);
-	QLineEdit* email = new QLineEdit("");
+	 email = new QLineEdit("");
 	inputlhs->addRow(tr("&email:"),email);		
-	/*ethnicity = new QComboBox();
-	ethnicityLabel = new QLabel("Ethnicity:");
-	inputlhs->addRow(ethnicityLabel);
-	ethnicity->addItem("Asian");
-	ethnicity->addItem("American Indian or Alaska Native");
-	ethnicity->addItem("Black or African American");
-	ethnicity->addItem("Native Hawaiian or Other Pacific Islander");
-	ethnicity->addItem("White");
-	inputlhs->addRow(ethnicity);
-	*/
 	makeInput = new QLineEdit("");
 	inputlhs->addRow(tr("&Make:"),makeInput);
+	modelInput = new QLineEdit("");
+	inputlhs->addRow(tr("&Model:"),modelInput);
 	colorInput2 = new QLineEdit("");
 	inputlhs->addRow(tr("&Exterior Color:"),colorInput2);
 	colorInput = new QLineEdit("");
 	inputlhs->addRow(tr("&Interior Color:"),colorInput);
 	yearInput = new QLineEdit("");
 	inputlhs->addRow(tr("&Year:"),yearInput);
-	mrsp = new QLineEdit("");
-	inputlhs->addRow(tr("&Options:"),mrsp);
-	valueInput = new QLineEdit("");
-	inputlhs->addRow(tr("&PriceQuoted:"),valueInput);	
+	msrpInput = new QLineEdit("");
+	inputlhs->addRow(tr("&MSRP:"),msrpInput);
+	optionsInput = new QLineEdit("");
+	inputlhs->addRow(tr("&options:"),optionsInput);
+	priceInput = new QLineEdit("");
+	inputlhs->addRow(tr("&PriceQuoted:"),priceInput);	
 	overallLayout->addLayout(inputlhs);
 	purpose = new QComboBox();
 	QLabel* purposeLabel = new QLabel("Purpose:");
@@ -683,35 +671,21 @@ void MainWindow::showPopup()
 	QLabel* callDate = new QLabel("Select Date:");
 	editC = new QCalendarWidget;
 	editC->setGridVisible(true);	
-	//add to data structure
 	QLabel* Comment = new QLabel("Comments:");
 	commentInput = new QTextEdit();
-	//input2->addLayout(inputrhs);
 	overallLayout->addWidget(purposeLabel);
 	overallLayout->addWidget(purpose);
 	overallLayout->addWidget(callDate);
 	overallLayout->addWidget(editC);
 	overallLayout->addWidget(Comment);
 	overallLayout->addWidget(commentInput);	
-	//inputLayout->addLayout(inputlhs);
-	/*inputLayout->addLayout(inputmhs);
-	inputLayout->addLayout(inputrhs);*/
-	//overallLayout->addLayout(inputLayout);	
-
 	QPushButton* saveButton = new QPushButton("Save");
 	connect(saveButton, SIGNAL(clicked()), this, SLOT(saveInput()));
 	overallLayout->addWidget(saveButton);
 	popWindow->setLayout(overallLayout);
 	popWindow->exec();
 }
-void MainWindow::uploadF()
-{
-	QString fileName = QFileDialog::getOpenFileName(this,tr("Open File"),"Home//","PDF files(*.pdf);;Text File(*.txt)");
-	_keepFiles.push_back(fileName);	
-	showAddressF->addItem(fileName);
-	saveToBackup();
-}
-void MainWindow::seeDetails(int index)
+/*void MainWindow::seeDetails(int index)
 {
 	if (index<0)
 		return;
@@ -729,8 +703,8 @@ void MainWindow::seeDetails(int index)
 	
 	detailFile->exec();
 
-}
-void MainWindow::changeSave()
+}*/
+/*void MainWindow::changeSave()
 {
 	string nameS = nameInput->text().toStdString();
 	for(int i=0;i<(int)nameS.size();i++)
@@ -778,6 +752,7 @@ void MainWindow::changeSave()
 	{
 		genderS = "Female";
 	}*/
+		/*
 	cout << "ohhh lala" << endl;
 	string occupationS = occupation->text().toStdString();	
 	string makeS = makeInput->text().toStdString();
@@ -838,123 +813,40 @@ void MainWindow::changeSuccess()
 	msgBox->setStandardButtons(QMessageBox::Cancel);
 	msgBox->exec();	
 	saveToBackup();
-}
+}*/
 void MainWindow::saveInput()
-{
-	string nameS = nameInput->text().toStdString();
-	for(int i=0;i<(int)nameS.size();i++)
-		if (nameS[i]==' ') nameS[i]='*';
-	
-	string cellS = cellInput->text().toStdString();
-
-	string cell2S = cellInput2->text().toStdString();
-	string emailS = email->text().toStdString();
-	string addressInputS = addressInput->text().toStdString();
-	for(int i=0;i<(int)addressInputS.size();i++)
-		if (addressInputS[i]==' ') addressInputS[i]='*';
-	string referralS = referralInput->text().toStdString();
-	string brokerS = brokerInput->text().toStdString();
-	string ssnS = ssnInput->text().toStdString();
-	string incomeS = income->text().toStdString();
-	string dobS = dob->text().toStdString();
-	string officeS = officeInput->text().toStdString();
-	//ethnicity = new QComboBox();
-	string ethnicityS;
-	if (ethnicity->currentIndex() == 0)
-	{
-		ethnicityS = "Asian";
-	}
-	else if (ethnicity->currentIndex() == 1)
-	{
-		ethnicityS = "AmericanIndianorAlaskaNative";
-	}
-	else if (ethnicity->currentIndex() == 2)
-	{
-		ethnicityS = "BlackorAfricanAmerican";
-	}
-	else if (ethnicity->currentIndex() == 3)
-	{
-		ethnicityS = "NativeHawaiianorOtherPacificIslander";
-	}
-	else if (ethnicity->currentIndex() == 4)
-	{
-		ethnicityS = "White";
-	}
-	string genderS;
-	if (gender->currentIndex() == 0)
-	{
-		genderS = "Male";
-	}
-	else if (gender->currentIndex() == 1)
-	{
-		genderS = "Female";
-	}
-
-	string occupationS = occupation->text().toStdString();	
-	string makeS = makeInput->text().toStdString();
-	string color1S = colorInput2->text().toStdString();
-	string color2S = colorInput->text().toStdString();
-	string yearS = yearInput->text().toStdString();
-	string mrspS = mrsp->text().toStdString();
-	string valueInputS = valueInput->text().toStdString();
-	string navigationS = navigation->text().toStdString();
-	string CameraS = RCamera->text().toStdString();
-	string featureS = featureInput->text().toStdString();
-	string purposeS;
-	if (purpose->currentIndex() == 0)
-	{
-		purposeS = "Purchasing";
-	}
-	else if (purpose->currentIndex() == 1)
-	{
-		purposeS = "Leasing";
-	}
-	string commentS = commentInput->toPlainText().toStdString();
-	QDate presentDate=QDate::currentDate();
+{	QDate presentDate=QDate::currentDate();
 	QString presentDateQS=presentDate.toString("yyyy.MM.dd");
 	string presentDateS=presentDateQS.toStdString();
-	QDate selectedDate2 = editC->selectedDate();
-	QString selectedDateQS2 = selectedDate2.toString("yyyy.MM.dd"); 
-	string selectedDateS = selectedDateQS2.toStdString();
-	user newUser(nameS,presentDateS,cellS,cell2S,addressInputS);
-	cout << "what's wrong " << endl;
+	string nameS = nameInput->text().toStdString();
+	for(int i=0;i<(int)nameS.size();i++)
+		if (nameS[i]==' ') nameS[i]='*';	
+	string cellS = cellInput->text().toStdString();
+	string emailS = email->text().toStdString();
+	//int purposeS=purpose->currentIndex();
+	string make=makeInput->text().toStdString();
+	string model=modelInput->text().toStdString();
+	string exterior=colorInput2->text().toStdString();
+	string interior=colorInput->text().toStdString();
+	string year=yearInput->text().toStdString();
+	string msrp=msrpInput->text().toStdString();
+	string options=optionsInput->text().toStdString();
+	string price=priceInput->text().toStdString();
+	user newUser(nameS,presentDateS,cellS);
 	newUser._email=emailS;
-	newUser._Referral=referralS;
-	newUser._Broker=brokerS;
-	newUser._Office=officeS;
-	newUser._SSN=ssnS;
-	newUser._MonthlyIncome=incomeS;
-	newUser._DOB=dobS;
-	newUser._Ethnicity=ethnicityS;
-	newUser._Gender=genderS;
-	newUser._Occupation=occupationS;
-	newUser._callBackDate=selectedDateS;
-	newUser.haveCar=true;
-	for (unsigned int i=0; i<_keepFiles.size(); i++)
-	{
-		newUser._files.push_back(_keepFiles[i].toStdString());
-	}
-	for (unsigned int i=0; i<_keepImages.size(); i++)
-	{
-		newUser._files.push_back(_keepImages[i].toStdString());
-	}
-	//initialize car
-	car addCar(makeS,color1S,color2S,yearS);
-	addCar._MRSP=mrspS;
-	addCar._value=valueInputS;
-	addCar._navigation=navigationS;
-	addCar._rearCamera=CameraS;
-	addCar._feature=featureS;
-	//add call history
-	newUser._car=addCar;
-	for (int i=0;i<(int)commentS.size();i++)
-		if (commentS[i]==' ')
-			commentS[i]='*';
-	
-	newUser.generateCallHistory(presentDateS,addCar,purposeS,commentS);
+	newUser._make=make;
+	newUser._model=model;
+	newUser._exterior=exterior;
+	newUser._interior=interior;
+	newUser._year=year;
+	newUser._msrp=msrp;
+	newUser._options=options;
+	newUser._price=price;
+
+	newUser._new=0;
+	newUser._lease=purpose->currentIndex();
 	//newUser._callHistory.push_back(callH);
 	//newUser._callHistoryNum=newUser._callHistory.size();
-	newUser.check();
 	db.addUser(newUser);
 	saveSuccess();
 }
