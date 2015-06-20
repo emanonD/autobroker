@@ -180,7 +180,7 @@ void MainWindow::excelPopup()
             purposeItem=new QTableWidgetItem("lease");
         else
             purposeItem=new QTableWidgetItem("Purchase");
-        customersWidget->setItem(i,9, purposeItem);
+        customersWidget->setItem(i,10, purposeItem);
         customernum++;
     }
     leadsWidget->setSortingEnabled(true);
@@ -195,6 +195,7 @@ void MainWindow::excelPopup()
     excelLayout->addWidget(customerLabel);
     excelLayout->addWidget(customersWidget);
     excelWindow->setLayout(excelLayout);
+    excelWindow->resize(800,600);
     excelWindow->exec();
 }
 void MainWindow::viewPopup()
@@ -315,9 +316,12 @@ void MainWindow::reminder()
     QVBoxLayout* overallLayout = new QVBoxLayout();
     reminderWindow.setWindowTitle("Reminder");
     QListWidget* reminderList = new QListWidget(0);
+    QLabel* tdLabel=new QLabel("Today:");
     //Need further work
+    overallLayout->addWidget(tdLabel);
     overallLayout->addWidget(reminderList);
-    reminderList->addItem("Today:");
+    
+
     QString presentDateQS4=QDate::currentDate().toString("yyyy.MM.dd");
     string qdate = presentDateQS4.toStdString();
     cout << db.findDate(qdate).size() << " size" << endl;
@@ -478,6 +482,11 @@ void MainWindow::saveInput2()
         newUser._lease=purpose->currentIndex()-1;
         //newUser._callHistory.push_back(callH);
         //newUser._callHistoryNum=newUser._callHistory.size();
+        QDate selectedDate2 = editC->selectedDate();
+		QString selectedDateQS2 = selectedDate2.toString("yyyy.MM.dd");
+		string selectedDateS2 = selectedDateQS2.toStdString();
+//cout<<selectedDateS2<<endl;
+		newUser._callBackDate=selectedDateS2;
         db.addUser(newUser);
         saveSuccess();
     }
@@ -1178,6 +1187,11 @@ void MainWindow::saveInput()
 
     newUser._new=0;
     newUser._lease=purpose->currentIndex();
+    QDate selectedDate2 = editC->selectedDate();
+		QString selectedDateQS2 = selectedDate2.toString("yyyy.MM.dd");
+		string selectedDateS2 = selectedDateQS2.toStdString();
+//cout<<selectedDateS2<<endl;
+		newUser._callBackDate=selectedDateS2;
     //newUser._callHistory.push_back(callH);
     //newUser._callHistoryNum=newUser._callHistory.size();
     db.addUser(newUser);
