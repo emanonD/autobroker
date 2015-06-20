@@ -19,25 +19,25 @@ selectFile();
 
 
     //buttonLayout->addWidget(inputData);
-    select = new QLabel("Please select from the following:") ;
-    buttonLayout->addWidget(select);
-    searchFile = new QPushButton("Add New User");
-    connect(searchFile, SIGNAL(clicked()), this, SLOT(newUserPopup()));
-    inputFile = new QPushButton("Add New Lead");
-    connect(inputFile, SIGNAL(clicked()), this, SLOT(showPopup()));
+   // select = new QLabel("Please select from the following:") ;
+    //buttonLayout->addWidget(select);
+    //searchFile = new QPushButton("Add New User");
+    //connect(searchFile, SIGNAL(clicked()), this, SLOT(newUserPopup()));
+    //inputFile = new QPushButton("Add New Lead");
+    //connect(inputFile, SIGNAL(clicked()), this, SLOT(showPopup()));
 
 //	exportFile = new QRadioButton("Output to file");
-    viewPlan = new QPushButton("View Database");
-    connect(viewPlan, SIGNAL(clicked()), this, SLOT(excelPopup()));
+ excelPopup();
 
 
-    buttonLayout->addWidget(select);
+  //  buttonLayout->addWidget(select);
 
-    buttonLayout->addWidget(searchFile);
-    buttonLayout->addWidget(inputFile);
+  //  buttonLayout->addWidget(searchFile);
+  //  buttonLayout->addWidget(inputFile);
     buttonLayout->addWidget(viewPlan);
     //buttonLayout->addWidget(exportFile);
     setLayout(buttonLayout);
+    this->hide();
 }
 
 MainWindow::~MainWindow()
@@ -56,18 +56,30 @@ void MainWindow::excelPopup()
     vector<user> allUser=db.search(searchKey);
     QHBoxLayout* leadButtons=new QHBoxLayout();
     QPushButton* leadDelete=new QPushButton("Delete");
-    leadDelete->setMaximumWidth(100);
+   searchFile = new QPushButton("Add New Customer");
+    connect(searchFile, SIGNAL(clicked()), this, SLOT(newUserPopup()));
+    QPushButton* reminderButton=new QPushButton("reminder");
+    connect(reminderButton,SIGNAL(clicked()),this,SLOT(reminder()));
+
+    searchFile->setMaximumWidth(200);
+  
+    inputFile = new QPushButton("Add New Potential Customer");
+    connect(inputFile, SIGNAL(clicked()), this, SLOT(showPopup()));
+    inputFile->setMaximumWidth(200);
+    leadDelete->setMaximumWidth(200);
+      leadButtons->addWidget(inputFile);
      connect(leadDelete, SIGNAL(clicked()), this, SLOT(deleteLead()));
     QPushButton* leadEdit=new QPushButton("edit");
-    leadEdit->setMaximumWidth(100);
+    leadEdit->setMaximumWidth(200);
     leadButtons->addWidget(leadDelete);
    // leadButtons->addWidget(leadEdit);
     QHBoxLayout* customerButtons=new QHBoxLayout();
     QPushButton* customerDelete=new QPushButton("Delete");
-    customerDelete->setMaximumWidth(100);
+    customerDelete->setMaximumWidth(200);
      connect(customerDelete, SIGNAL(clicked()), this, SLOT(deleteCustomer()));
     QPushButton* customerEdit=new QPushButton("edit");
-    customerEdit->setMaximumWidth(100);
+    customerEdit->setMaximumWidth(200);
+    customerButtons->addWidget(searchFile);
     customerButtons->addWidget(customerDelete);
     //customerButtons->addWidget(customerEdit);
     int leadnum=0;
@@ -172,6 +184,7 @@ void MainWindow::excelPopup()
 	viewFile = new QPushButton("Search");
 	connect(viewFile, SIGNAL(clicked()), this, SLOT(viewPopup()));
 	excelLayout->addWidget(viewFile);
+	 excelLayout->addWidget(reminderButton);
     excelLayout->addWidget(leadLabel);
     excelLayout->addWidget(leadsWidget);
     excelLayout->addLayout(leadButtons,5,0);
@@ -179,8 +192,10 @@ void MainWindow::excelPopup()
     excelLayout->addWidget(customersWidget);
     excelLayout->addLayout(customerButtons,10,0);
     excelWindow->setLayout(excelLayout);
-    excelWindow->resize(1200,600);
-    excelWindow->exec();
+   excelWindow->setWindowFlags(Qt::Window);
+excelWindow->showFullScreen();
+  //  excelWindow->resize(1200,600);
+   excelWindow->exec();
 }
 void MainWindow::deleteLead()
 {
@@ -237,6 +252,8 @@ void MainWindow::viewPopup()
     vector<user> allUser=userR;
     int leadnum=0;
     int customernum=0;
+     leadsWidget->setSortingEnabled(0);
+    customersWidget->setSortingEnabled(0);
     leadsWidget->clearContents();
     for(int i=0;i<leadsWidget->rowCount();i++)
     	leadsWidget->removeRow(0);
@@ -253,9 +270,10 @@ void MainWindow::viewPopup()
         {
             nameInput1 = nameInput1+tempN[j]+" ";
         }
-        cout<<nameInput1;
+      //  cout<<nameInput1;
         QTableWidgetItem* dateItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._date));
         leadsWidget->setItem(leadnum,0, dateItem);
+        cout<<"leadnum: "<<leadnum<<" "<<nameInput1<<endl;
         QTableWidgetItem* nameItem=new QTableWidgetItem(QString::fromStdString(nameInput1));
         leadsWidget->setItem(leadnum,1, nameItem);
         QTableWidgetItem* cellItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._cell));
@@ -283,11 +301,11 @@ void MainWindow::viewPopup()
             purposeItem=new QTableWidgetItem("lease");
         else
             purposeItem=new QTableWidgetItem("Purchase");
-        leadsWidget->setItem(i,12, purposeItem);
+        leadsWidget->setItem(leadnum,12, purposeItem);
         leadnum++;
     }
-    for (int i=0; i<allUser.size(); i++)
-    	if (allUser[i]._new) 
+   
+    else	if (allUser[i]._new) 
     {
     	customersWidget->insertRow(customernum);
         vector<string> tempN = allUser[i]._name;
@@ -328,7 +346,7 @@ void MainWindow::viewPopup()
             purposeItem=new QTableWidgetItem("lease");
         else
             purposeItem=new QTableWidgetItem("Purchase");
-        customersWidget->setItem(i,10, purposeItem);
+        customersWidget->setItem(customernum,10, purposeItem);
         customernum++;
     }
     leadsWidget->setSortingEnabled(true);

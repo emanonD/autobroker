@@ -47,7 +47,7 @@ private slots:
 	void viewPopup();
 	void saveInput();
 	void saveInput2();
-	void excelPopup();
+	
 	void deleteLead();
 	void deleteCustomer();
 	//void editUser();
@@ -66,6 +66,7 @@ private slots:
 	void popUpModifier(int index);
 private:
 	//dbase db();
+	void excelPopup();
 	vector<user> userR;
 	vector<QString> _keepImages;
 	vector<QString> _keepFiles;
