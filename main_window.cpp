@@ -44,7 +44,7 @@ struct ObjD
 
 MainWindow::MainWindow()
 {
-//selectFile();
+selectFile();
 
     // Title
     setWindowTitle("Welcome to Autobroker Database!");
@@ -78,20 +78,21 @@ MainWindow::~MainWindow()
 {
 }
 void MainWindow::excelPopup()
-{
+{	QLabel* leadLabel=new QLabel("Leads:");
+	QLabel* customerLabel=new QLabel("Customers:");
     excelWindow=new QDialog();
     QGridLayout* excelLayout=new QGridLayout();
     QStringList leadHeaders;
-    leadHeaders<<"name"<<"cell"<<"Email"<<"Make"<<"Model"<<"Exterior"<<"Interior"<<"Year"<<"MSRP"<<"Options"<<"PriceQuoted"<<"Purpose";
+    leadHeaders<<"date"<<"name"<<"cell"<<"Email"<<"Make"<<"Model"<<"Exterior"<<"Interior"<<"Year"<<"MSRP"<<"Options"<<"PriceQuoted"<<"Purpose";
     QStringList customerHeaders;
-    customerHeaders<<"name"<<"cell"<<"Email"<<"Make"<<"Model"<<"Down Payment"<<"Term"<<"Miles/Year"<<"Dotd"<<"purpose";
+    customerHeaders<<"date"<<"name"<<"cell"<<"Email"<<"Make"<<"Model"<<"Down Payment"<<"Term"<<"Miles/Year"<<"Dotd"<<"purpose";
     vector<string> searchKey;
     vector<user> allUser=db.search(searchKey);
     int leadnum=0;
     int customernum=0;
     cout<<allUser.size();
-    QTableWidget* leadsWidget = new QTableWidget(leadnum, 12);	//leadsWidget->setRowCount(leadnum);
-    QTableWidget* customersWidget = new QTableWidget(customernum, 10);
+    leadsWidget = new QTableWidget(leadnum, 13);	//leadsWidget->setRowCount(leadnum);
+    customersWidget = new QTableWidget(customernum, 11);
     leadsWidget->setHorizontalHeaderLabels(leadHeaders);
     customersWidget->setHorizontalHeaderLabels(customerHeaders);
     for (int i=0; i<allUser.size(); i++)
@@ -105,34 +106,36 @@ void MainWindow::excelPopup()
             nameInput1 = nameInput1+tempN[j]+" ";
         }
         cout<<nameInput1;
+        QTableWidgetItem* dateItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._date));
+        leadsWidget->setItem(leadnum,0, dateItem);
         QTableWidgetItem* nameItem=new QTableWidgetItem(QString::fromStdString(nameInput1));
-        leadsWidget->setItem(leadnum,0, nameItem);
+        leadsWidget->setItem(leadnum,1, nameItem);
         QTableWidgetItem* cellItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._cell));
-        leadsWidget->setItem(leadnum,1, cellItem);
+        leadsWidget->setItem(leadnum,2, cellItem);
         QTableWidgetItem* emailItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._email));
-        leadsWidget->setItem(leadnum,2, emailItem);
+        leadsWidget->setItem(leadnum,3, emailItem);
         QTableWidgetItem* makeItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._make));
-        leadsWidget->setItem(leadnum,3, makeItem);
+        leadsWidget->setItem(leadnum,4, makeItem);
         QTableWidgetItem* modelItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._model));
-        leadsWidget->setItem(leadnum,4, modelItem);
+        leadsWidget->setItem(leadnum,5, modelItem);
         QTableWidgetItem* exteriorItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._exterior));
-        leadsWidget->setItem(leadnum,5, exteriorItem);
+        leadsWidget->setItem(leadnum,6, exteriorItem);
         QTableWidgetItem* interiorItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._interior));
-        leadsWidget->setItem(leadnum,6, interiorItem);
+        leadsWidget->setItem(leadnum,7, interiorItem);
         QTableWidgetItem* yearItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._year));
-        leadsWidget->setItem(leadnum,7, yearItem);
+        leadsWidget->setItem(leadnum,8, yearItem);
         QTableWidgetItem* msrpItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._msrp));
-        leadsWidget->setItem(leadnum,8, msrpItem);
+        leadsWidget->setItem(leadnum,9, msrpItem);
         QTableWidgetItem* optionsItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._options));
-        leadsWidget->setItem(leadnum,9, optionsItem);
+        leadsWidget->setItem(leadnum,10, optionsItem);
         QTableWidgetItem* priceItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._price));
-        leadsWidget->setItem(leadnum,10, priceItem);
+        leadsWidget->setItem(leadnum,11, priceItem);
         QTableWidgetItem* purposeItem;
         if (allUser[i]._lease)
             purposeItem=new QTableWidgetItem("lease");
         else
             purposeItem=new QTableWidgetItem("Purchase");
-        leadsWidget->setItem(i,11, purposeItem);
+        leadsWidget->setItem(i,12, purposeItem);
         leadnum++;
     }
     for (int i=0; i<allUser.size(); i++)
@@ -146,29 +149,31 @@ void MainWindow::excelPopup()
             nameInput1 = nameInput1+tempN[j]+" ";
         }
         cout<<nameInput1;
+        QTableWidgetItem* dateItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._date));
+        customersWidget->setItem(customernum,0, dateItem);
         QTableWidgetItem* nameItem=new QTableWidgetItem(QString::fromStdString(nameInput1));
-        customersWidget->setItem(customernum,0, nameItem);
+        customersWidget->setItem(customernum,1, nameItem);
         QTableWidgetItem* cellItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._cell));
-        customersWidget->setItem(customernum,1, cellItem);
+        customersWidget->setItem(customernum,2, cellItem);
         QTableWidgetItem* emailItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._email));
-        customersWidget->setItem(customernum,2, emailItem);
+        customersWidget->setItem(customernum,3, emailItem);
         QTableWidgetItem* makeItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._make));
-        customersWidget->setItem(customernum,3, makeItem);
+        customersWidget->setItem(customernum,4, makeItem);
         QTableWidgetItem* modelItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._model));
-        customersWidget->setItem(customernum,4, modelItem);
+        customersWidget->setItem(customernum,5, modelItem);
         if (allUser[i]._lease)
         {
         	QTableWidgetItem* downItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._down));
-        customersWidget->setItem(customernum,5, downItem);
+        customersWidget->setItem(customernum,6, downItem);
         QTableWidgetItem* termItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._term));
-        customersWidget->setItem(customernum,6, termItem);
+        customersWidget->setItem(customernum,7, termItem);
         QTableWidgetItem* milesItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._miles));
-        customersWidget->setItem(customernum,7, milesItem);
+        customersWidget->setItem(customernum,8, milesItem);
         }
         else
         {
         	QTableWidgetItem* dotdItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._dotd));
-        customersWidget->setItem(customernum,8, dotdItem);
+        customersWidget->setItem(customernum,9, dotdItem);
         }	
         QTableWidgetItem* purposeItem;
         if (allUser[i]._lease)
@@ -180,10 +185,129 @@ void MainWindow::excelPopup()
     }
     leadsWidget->setSortingEnabled(true);
     customersWidget->setSortingEnabled(true);
-    excelLayout->addWidget(leadsWidget,0,0);
+    searchInput = new QLineEdit();
+	excelLayout->addWidget(searchInput);
+	viewFile = new QPushButton("Search");
+	connect(viewFile, SIGNAL(clicked()), this, SLOT(viewPopup()));
+	excelLayout->addWidget(viewFile);
+    excelLayout->addWidget(leadLabel);
+    excelLayout->addWidget(leadsWidget);
+    excelLayout->addWidget(customerLabel);
     excelLayout->addWidget(customersWidget);
     excelWindow->setLayout(excelLayout);
     excelWindow->exec();
+}
+void MainWindow::viewPopup()
+{
+    string search = searchInput->text().toStdString();
+    string temp;
+    stringstream ss(search);
+    vector<string> R;
+    while (ss>>temp)
+    {
+        cout << "search Input " << temp << endl;
+        R.push_back(temp);
+    }
+    userR = db.search(R);
+    vector<user> allUser=userR;
+    int leadnum=0;
+    int customernum=0;
+    leadsWidget->clearContents();
+    for(int i=0;i<leadsWidget->rowCount();i++)
+    	leadsWidget->removeRow(0);
+    customersWidget->clearContents();
+    for(int i=0;i<customersWidget->rowCount();i++)
+    	customersWidget->removeRow(0);
+    for (int i=0; i<allUser.size(); i++)
+    	if (!allUser[i]._new) 
+    {
+    	leadsWidget->insertRow(leadnum);
+        vector<string> tempN = allUser[i]._name;
+        string nameInput1 = "";
+        for (unsigned int j=0; j<tempN.size(); j++)
+        {
+            nameInput1 = nameInput1+tempN[j]+" ";
+        }
+        cout<<nameInput1;
+        QTableWidgetItem* dateItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._date));
+        leadsWidget->setItem(leadnum,0, dateItem);
+        QTableWidgetItem* nameItem=new QTableWidgetItem(QString::fromStdString(nameInput1));
+        leadsWidget->setItem(leadnum,1, nameItem);
+        QTableWidgetItem* cellItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._cell));
+        leadsWidget->setItem(leadnum,2, cellItem);
+        QTableWidgetItem* emailItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._email));
+        leadsWidget->setItem(leadnum,3, emailItem);
+        QTableWidgetItem* makeItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._make));
+        leadsWidget->setItem(leadnum,4, makeItem);
+        QTableWidgetItem* modelItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._model));
+        leadsWidget->setItem(leadnum,5, modelItem);
+        QTableWidgetItem* exteriorItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._exterior));
+        leadsWidget->setItem(leadnum,6, exteriorItem);
+        QTableWidgetItem* interiorItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._interior));
+        leadsWidget->setItem(leadnum,7, interiorItem);
+        QTableWidgetItem* yearItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._year));
+        leadsWidget->setItem(leadnum,8, yearItem);
+        QTableWidgetItem* msrpItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._msrp));
+        leadsWidget->setItem(leadnum,9, msrpItem);
+        QTableWidgetItem* optionsItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._options));
+        leadsWidget->setItem(leadnum,10, optionsItem);
+        QTableWidgetItem* priceItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._price));
+        leadsWidget->setItem(leadnum,11, priceItem);
+        QTableWidgetItem* purposeItem;
+        if (allUser[i]._lease)
+            purposeItem=new QTableWidgetItem("lease");
+        else
+            purposeItem=new QTableWidgetItem("Purchase");
+        leadsWidget->setItem(i,12, purposeItem);
+        leadnum++;
+    }
+    for (int i=0; i<allUser.size(); i++)
+    	if (allUser[i]._new) 
+    {
+    	customersWidget->insertRow(customernum);
+        vector<string> tempN = allUser[i]._name;
+        string nameInput1 = "";
+        for (unsigned int j=0; j<tempN.size(); j++)
+        {
+            nameInput1 = nameInput1+tempN[j]+" ";
+        }
+        cout<<nameInput1;
+        QTableWidgetItem* dateItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._date));
+        customersWidget->setItem(customernum,0, dateItem);
+        QTableWidgetItem* nameItem=new QTableWidgetItem(QString::fromStdString(nameInput1));
+        customersWidget->setItem(customernum,1, nameItem);
+        QTableWidgetItem* cellItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._cell));
+        customersWidget->setItem(customernum,2, cellItem);
+        QTableWidgetItem* emailItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._email));
+        customersWidget->setItem(customernum,3, emailItem);
+        QTableWidgetItem* makeItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._make));
+        customersWidget->setItem(customernum,4, makeItem);
+        QTableWidgetItem* modelItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._model));
+        customersWidget->setItem(customernum,5, modelItem);
+        if (allUser[i]._lease)
+        {
+        	QTableWidgetItem* downItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._down));
+        customersWidget->setItem(customernum,6, downItem);
+        QTableWidgetItem* termItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._term));
+        customersWidget->setItem(customernum,7, termItem);
+        QTableWidgetItem* milesItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._miles));
+        customersWidget->setItem(customernum,8, milesItem);
+        }
+        else
+        {
+        	QTableWidgetItem* dotdItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._dotd));
+        customersWidget->setItem(customernum,9, dotdItem);
+        }	
+        QTableWidgetItem* purposeItem;
+        if (allUser[i]._lease)
+            purposeItem=new QTableWidgetItem("lease");
+        else
+            purposeItem=new QTableWidgetItem("Purchase");
+        customersWidget->setItem(i,9, purposeItem);
+        customernum++;
+    }
+    leadsWidget->setSortingEnabled(true);
+    customersWidget->setSortingEnabled(true);
 }
 void MainWindow::reminder()
 {
@@ -816,37 +940,7 @@ void MainWindow::sortD(vector<user> r)
     ObjD objD;
     mergeSort(r,objD);
 }
-void MainWindow::viewPopup()
-{
-    string search = searchInput->text().toStdString();
-    string temp;
-    stringstream ss(search);
-    vector<string> R;
-    while (ss>>temp)
-    {
-        cout << "search Input " << temp << endl;
-        R.push_back(temp);
-    }
-    userR = db.search(R);
-    if (list->currentIndex() == 0)
-    {
-        cout << "inside sortN " << endl;
-        sortN(userR);
-    }
-    //sort by rate
-    else if (list->currentIndex() == 1)
-    {
-        sortD(userR);
-    }
-    profileListWidget->clear();
-    for (unsigned int i=0; i<userR.size(); i++)
-    {
-        std::string str1= userR[i].displayString();
-        cout << "search result " << str1 << endl;
-        QString qstr1 = QString::fromStdString(str1);
-        profileListWidget->addItem(qstr1);
-    }
-}
+
 //save to file window
 void MainWindow::exportPopup()
 {

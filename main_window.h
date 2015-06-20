@@ -73,6 +73,8 @@ private:
 	QString selectedDateQS;
 	QLabel* fileContainer;
 	//QHBoxLayout* overallLayout;
+	QTableWidget* leadsWidget;
+	QTableWidget* customersWidget;
 	QDialog* excelWindow;
 	QVBoxLayout* lhsLayout;
 	QVBoxLayout* buttonLayout;
