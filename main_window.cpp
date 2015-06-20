@@ -8,40 +8,6 @@
 using namespace std;
 dbase db;
 
-
-struct ObjN
-{
-    bool operator()(user u1, user u2)
-    {
-        vector<string> tempN1 = u1._name;
-        string nameInput1 = "";
-        for (unsigned int i=0; i<tempN1.size(); i++)
-        {
-            nameInput1 = nameInput1+tempN1[i];
-        }
-        cout << "nameInput1 " << nameInput1 << endl;
-        vector<string> tempN2 = u2._name;
-        string nameInput2 = "";
-        for (unsigned int i=0; i<tempN2.size(); i++)
-        {
-            nameInput2 = nameInput2+tempN2[i];
-        }
-        cout << "nameInput2 " << nameInput2 << endl;
-        //cout << "check " << nameInput1<nameInput2 << endl;
-        return nameInput1<nameInput2;
-    }
-};
-
-struct ObjD
-{
-    bool operator()(user u1, user u2)
-    {
-        string date1 = u1._date;
-        string date2 = u2._date;
-        return date1<date2;
-    }
-};
-
 MainWindow::MainWindow()
 {
 selectFile();
@@ -88,6 +54,22 @@ void MainWindow::excelPopup()
     customerHeaders<<"date"<<"name"<<"cell"<<"Email"<<"Make"<<"Model"<<"Down Payment"<<"Term"<<"Miles/Year"<<"Dotd"<<"purpose";
     vector<string> searchKey;
     vector<user> allUser=db.search(searchKey);
+    QHBoxLayout* leadButtons=new QHBoxLayout();
+    QPushButton* leadDelete=new QPushButton("Delete");
+    leadDelete->setMaximumWidth(100);
+     connect(leadDelete, SIGNAL(clicked()), this, SLOT(deleteLead()));
+    QPushButton* leadEdit=new QPushButton("edit");
+    leadEdit->setMaximumWidth(100);
+    leadButtons->addWidget(leadDelete);
+   // leadButtons->addWidget(leadEdit);
+    QHBoxLayout* customerButtons=new QHBoxLayout();
+    QPushButton* customerDelete=new QPushButton("Delete");
+    customerDelete->setMaximumWidth(100);
+     connect(customerDelete, SIGNAL(clicked()), this, SLOT(deleteCustomer()));
+    QPushButton* customerEdit=new QPushButton("edit");
+    customerEdit->setMaximumWidth(100);
+    customerButtons->addWidget(customerDelete);
+    //customerButtons->addWidget(customerEdit);
     int leadnum=0;
     int customernum=0;
     cout<<allUser.size();
@@ -192,11 +174,53 @@ void MainWindow::excelPopup()
 	excelLayout->addWidget(viewFile);
     excelLayout->addWidget(leadLabel);
     excelLayout->addWidget(leadsWidget);
+    excelLayout->addLayout(leadButtons,5,0);
     excelLayout->addWidget(customerLabel);
     excelLayout->addWidget(customersWidget);
+    excelLayout->addLayout(customerButtons,10,0);
     excelWindow->setLayout(excelLayout);
-    excelWindow->resize(800,600);
+    excelWindow->resize(1200,600);
     excelWindow->exec();
+}
+void MainWindow::deleteLead()
+{
+	if(leadsWidget->currentRow()>=0)
+	{
+		int k=leadsWidget->currentRow();
+		leadsWidget->removeRow(k);
+
+		vector<string> searchKey;
+    	vector<user> allUser=db.search(searchKey);
+		int rowCount=0;
+		for (int i=0; i<allUser.size(); i++)
+    	if (!allUser[i]._new) 
+   		 {
+   		 	if (rowCount==k)
+   		 		db.users.erase(allUser[i]._key);
+   		 	rowCount++;
+   		 }
+	}
+	saveToBackup();
+}
+void MainWindow::deleteCustomer()
+{
+	if(customersWidget->currentRow()>=0)
+	{
+		int k=customersWidget->currentRow();
+		customersWidget->removeRow(k);
+
+		vector<string> searchKey;
+    	vector<user> allUser=db.search(searchKey);
+		int rowCount=0;
+		for (int i=0; i<allUser.size(); i++)
+    	if (allUser[i]._new) 
+   		 {
+   		 	if (rowCount==k)
+   		 		db.users.erase(allUser[i]._key);
+   		 	rowCount++;
+   		 }
+	}
+	saveToBackup();
 }
 void MainWindow::viewPopup()
 {
@@ -304,7 +328,7 @@ void MainWindow::viewPopup()
             purposeItem=new QTableWidgetItem("lease");
         else
             purposeItem=new QTableWidgetItem("Purchase");
-        customersWidget->setItem(i,9, purposeItem);
+        customersWidget->setItem(i,10, purposeItem);
         customernum++;
     }
     leadsWidget->setSortingEnabled(true);
@@ -939,16 +963,7 @@ popWindows->exec();
 	cout << "upload success " << endl;
 	saveToBackup();
 }*/
-void MainWindow::sortN(vector<user> r)
-{
-    ObjN objN;
-    mergeSort(r,objN);
-}
-void MainWindow::sortD(vector<user> r)
-{
-    ObjD objD;
-    mergeSort(r,objD);
-}
+
 
 //save to file window
 void MainWindow::exportPopup()

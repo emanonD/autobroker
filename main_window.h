@@ -48,6 +48,8 @@ private slots:
 	void saveInput();
 	void saveInput2();
 	void excelPopup();
+	void deleteLead();
+	void deleteCustomer();
 	//void editUser();
 	//void changeSave();
 	//void callHistory();
