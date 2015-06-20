@@ -20,11 +20,14 @@
 #include <vector>
 #include <map>
 #include <fstream>
+#include <QTableWidget>
 //#include "dbase/msort.h"
 #include "dbase/dbase.h"
 #include "dbase/user.h"
 #include "dbase/car.h"
 #include "dbase/callHistory.h"
+#include <stdio.h>
+#include <stdlib.h>
 //#include "dbase/callHistory.h"
 //dbase db();
 
@@ -43,6 +46,8 @@ private slots:
 	void selectFile();
 	void viewPopup();
 	void saveInput();
+	void saveInput2();
+	void excelPopup();
 	//void editUser();
 	//void changeSave();
 	//void callHistory();
@@ -55,6 +60,8 @@ private slots:
 	//void saveDPopup();
 	void reminder();
 	void showPopup();
+	void newUserPopup();
+	void popUpModifier(int index);
 private:
 	//dbase db();
 	vector<user> userR;
@@ -65,7 +72,8 @@ private:
 	QCalendarWidget* planC;
 	QString selectedDateQS;
 	QLabel* fileContainer;
-	QHBoxLayout* overallLayout;
+	//QHBoxLayout* overallLayout;
+	QDialog* excelWindow;
 	QVBoxLayout* lhsLayout;
 	QVBoxLayout* buttonLayout;
 	QDialog* historyWindow;
@@ -88,11 +96,20 @@ private:
 	QPushButton* ok1Button; 
 	QPushButton* callButton;
 	QPushButton* inputData;
-	
+	QHBoxLayout* cellLayout;
+	QVBoxLayout* overallLayout;
 	QLineEdit* email;
+	QLineEdit* cell1;
+	QLineEdit* cell2;
+	QLineEdit* cell3;
 	QLineEdit* modelInput;
 	QLineEdit* msrpInput;
 	QLineEdit* optionsInput;
+	QLineEdit* dotdInput;
+	QLineEdit* downInput;
+	QLineEdit* termInput;
+	QLineEdit* milesInput;
+	QFormLayout* inputlhs;
 	QLineEdit* dob;
 	QLabel* welcome;
 	QLabel* title1Label;

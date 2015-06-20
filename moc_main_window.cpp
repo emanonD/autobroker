@@ -22,7 +22,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   14, // methods
+       9,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -34,14 +34,20 @@ static const uint qt_meta_data_MainWindow[] = {
       25,   11,   11,   11, 0x08,
       37,   11,   11,   11, 0x08,
       49,   11,   11,   11, 0x08,
-      60,   11,   11,   11, 0x08,
+      62,   11,   11,   11, 0x08,
+      75,   11,   11,   11, 0x08,
+      86,   11,   11,   11, 0x08,
+      98,   11,   11,   11, 0x08,
+     119,  113,   11,   11, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_MainWindow[] = {
     "MainWindow\0\0selectFile()\0viewPopup()\0"
-    "saveInput()\0reminder()\0showPopup()\0"
+    "saveInput()\0saveInput2()\0excelPopup()\0"
+    "reminder()\0showPopup()\0newUserPopup()\0"
+    "index\0popUpModifier(int)\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -53,12 +59,15 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 0: _t->selectFile(); break;
         case 1: _t->viewPopup(); break;
         case 2: _t->saveInput(); break;
-        case 3: _t->reminder(); break;
-        case 4: _t->showPopup(); break;
+        case 3: _t->saveInput2(); break;
+        case 4: _t->excelPopup(); break;
+        case 5: _t->reminder(); break;
+        case 6: _t->showPopup(); break;
+        case 7: _t->newUserPopup(); break;
+        case 8: _t->popUpModifier((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     }
-    Q_UNUSED(_a);
 }
 
 const QMetaObjectExtraData MainWindow::staticMetaObjectExtraData = {
@@ -93,9 +102,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 5)
+        if (_id < 9)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 5;
+        _id -= 9;
     }
     return _id;
 }
