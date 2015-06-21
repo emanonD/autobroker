@@ -67,6 +67,8 @@ private slots:
 private:
 	//dbase db();
 	void excelPopup();
+	int addTrigger1;
+	int addTrigger2;
 	vector<user> userR;
 	vector<QString> _keepImages;
 	vector<QString> _keepFiles;

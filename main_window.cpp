@@ -193,10 +193,11 @@ void MainWindow::excelPopup()
     excelLayout->addLayout(customerButtons,10,0);
     excelWindow->setLayout(excelLayout);
    excelWindow->setWindowFlags(Qt::Window);
-excelWindow->showFullScreen();
+excelWindow->setWindowState(Qt::WindowMaximized);
   //  excelWindow->resize(1200,600);
    excelWindow->exec();
 }
+
 void MainWindow::deleteLead()
 {
 	if(leadsWidget->currentRow()>=0)
@@ -417,6 +418,8 @@ void MainWindow::selectFile()
 }
 void MainWindow::newUserPopup()
 {
+	addTrigger1=0;
+	addTrigger2=0;
     popWindow = new QDialog;
     popWindow->setWindowTitle("Add new User");
     overallLayout = new QVBoxLayout();
@@ -473,11 +476,13 @@ void MainWindow::newUserPopup()
 }
 void MainWindow::popUpModifier(int index)
 {
-    if (index==1)
+	
+    if ((index==1)&&(!addTrigger1))
     {   dotdInput = new QLineEdit("");
         inputlhs->addRow(tr("Dotd:"),dotdInput);
+        addTrigger1=1;
     }
-    else
+    else if (!addTrigger2)
     {
         downInput = new QLineEdit("");
         inputlhs->addRow(tr("DownPayment:"),downInput);
@@ -485,8 +490,9 @@ void MainWindow::popUpModifier(int index)
         inputlhs->addRow(tr("Term:"),termInput);
         milesInput = new QLineEdit("");
         inputlhs->addRow(tr("Miles/Year:"),milesInput);
+        addTrigger2=1;
     }
-
+   // addTrigger=1;
     popWindow->exec();
 }
 void MainWindow::saveInput2()
@@ -530,6 +536,7 @@ void MainWindow::saveInput2()
 //cout<<selectedDateS2<<endl;
 		newUser._callBackDate=selectedDateS2;
         db.addUser(newUser);
+        viewPopup();
         saveSuccess();
     }
 }
@@ -1228,6 +1235,7 @@ void MainWindow::saveInput()
     //newUser._callHistory.push_back(callH);
     //newUser._callHistoryNum=newUser._callHistory.size();
     db.addUser(newUser);
+    viewPopup();
     saveSuccess();
 }
 void MainWindow::saveSuccess()
