@@ -49,9 +49,9 @@ void MainWindow::excelPopup()
     excelWindow=new QDialog();
     QGridLayout* excelLayout=new QGridLayout();
     QStringList leadHeaders;
-    leadHeaders<<"date"<<"name"<<"cell"<<"Email"<<"Make"<<"Model"<<"Exterior"<<"Interior"<<"Year"<<"MSRP"<<"Options"<<"PriceQuoted"<<"Purpose";
+    leadHeaders<<"date"<<"name"<<"cell"<<"Email"<<"Make"<<"Model"<<"Exterior"<<"Interior"<<"Year"<<"MSRP"<<"Options"<<"PriceQuoted"<<"Purpose"<<"Order Number";
     QStringList customerHeaders;
-    customerHeaders<<"date"<<"name"<<"cell"<<"Email"<<"Make"<<"Model"<<"Down Payment"<<"Term"<<"Miles/Year"<<"Dotd"<<"purpose";
+    customerHeaders<<"date"<<"name"<<"cell"<<"Email"<<"Make"<<"Model"<<"Down Payment"<<"Term"<<"Miles/Year"<<"Dotd"<<"purpose"<<"Order Number";
     vector<string> searchKey;
     vector<user> allUser=db.search(searchKey);
     QHBoxLayout* leadButtons=new QHBoxLayout();
@@ -85,8 +85,8 @@ void MainWindow::excelPopup()
     int leadnum=0;
     int customernum=0;
     cout<<allUser.size();
-    leadsWidget = new QTableWidget(leadnum, 13);	//leadsWidget->setRowCount(leadnum);
-    customersWidget = new QTableWidget(customernum, 11);
+    leadsWidget = new QTableWidget(leadnum, 14);	//leadsWidget->setRowCount(leadnum);
+    customersWidget = new QTableWidget(customernum, 12);
     leadsWidget->setHorizontalHeaderLabels(leadHeaders);
     customersWidget->setHorizontalHeaderLabels(customerHeaders);
     for (int i=0; i<allUser.size(); i++)
@@ -130,6 +130,8 @@ void MainWindow::excelPopup()
         else
             purposeItem=new QTableWidgetItem("Purchase");
         leadsWidget->setItem(i,12, purposeItem);
+        QTableWidgetItem* orderNItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._orderNumber));
+        leadsWidget->setItem(leadnum,13,orderNItem);
         leadnum++;
     }
     for (int i=0; i<allUser.size(); i++)
@@ -175,7 +177,10 @@ void MainWindow::excelPopup()
         else
             purposeItem=new QTableWidgetItem("Purchase");
         customersWidget->setItem(i,10, purposeItem);
+        QTableWidgetItem* orderNItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._orderNumber));
+        customersWidget->setItem(leadnum,11,orderNItem);
         customernum++;
+
     }
     leadsWidget->setSortingEnabled(true);
     customersWidget->setSortingEnabled(true);
@@ -303,6 +308,8 @@ void MainWindow::viewPopup()
         else
             purposeItem=new QTableWidgetItem("Purchase");
         leadsWidget->setItem(leadnum,12, purposeItem);
+        QTableWidgetItem* orderNItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._orderNumber));
+        leadsWidget->setItem(leadnum,13,orderNItem);
         leadnum++;
     }
    
@@ -348,6 +355,8 @@ void MainWindow::viewPopup()
         else
             purposeItem=new QTableWidgetItem("Purchase");
         customersWidget->setItem(customernum,10, purposeItem);
+        QTableWidgetItem* orderNItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._orderNumber));
+        customersWidget->setItem(leadnum,11,orderNItem);
         customernum++;
     }
     leadsWidget->setSortingEnabled(true);
@@ -440,7 +449,8 @@ void MainWindow::newUserPopup()
     cellLayout->addWidget(dashLabel);
     cellLayout->addWidget(cell3);
     inputlhs->addRow(tr("&Name:"),nameInput);
-
+    orderNInput=new QLineEdit("");
+    inputlhs->addRow(tr("Order Number:"),orderNInput);
     inputlhs->addRow(tr("Cell:"),cellLayout);
     email = new QLineEdit("");
     inputlhs->addRow(tr("&Email:"),email);
@@ -511,8 +521,9 @@ void MainWindow::saveInput2()
         //int purposeS=purpose->currentIndex();
         string make=makeInput->text().toStdString();
         string model=modelInput->text().toStdString();
-
+        string orderN=orderNInput->text().toStdString();
         user newUser(nameS,presentDateS,cellS);
+        newUser._orderNumber=orderN;
         newUser._email=emailS;
         newUser._make=make;
         newUser._model=model;
@@ -1025,6 +1036,8 @@ void MainWindow::showPopup()
     cellLayout->addWidget(dashLabel);
     cellLayout->addWidget(cell3);
     inputlhs->addRow(tr("&Name:"),nameInput);
+      orderNInput=new QLineEdit("");
+    inputlhs->addRow(tr("Order Number:"),orderNInput);
     cellInput = new QLineEdit("");
     inputlhs->addRow(tr("Cell:"),cellLayout);
     email = new QLineEdit("");
@@ -1214,7 +1227,9 @@ void MainWindow::saveInput()
     string msrp=msrpInput->text().toStdString();
     string options=optionsInput->text().toStdString();
     string price=priceInput->text().toStdString();
-    user newUser(nameS,presentDateS,cellS);
+    string orderN=orderNInput->text().toStdString();
+        user newUser(nameS,presentDateS,cellS);
+        newUser._orderNumber=orderN;
     newUser._email=emailS;
     newUser._make=make;
     newUser._model=model;

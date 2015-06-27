@@ -116,6 +116,7 @@ private:
 	QLineEdit* downInput;
 	QLineEdit* termInput;
 	QLineEdit* milesInput;
+	QLineEdit* orderNInput;
 	QFormLayout* inputlhs;
 	QLineEdit* dob;
 	QLabel* welcome;
