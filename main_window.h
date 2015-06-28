@@ -11,6 +11,7 @@
 #include <QRadioButton>
 #include <QMessageBox>
 #include <QDate>
+#include <QTime>
 #include <QListWidget>
 #include <QDialog>
 #include <QFormLayout>
@@ -50,7 +51,8 @@ private slots:
 	
 	void deleteLead();
 	void deleteCustomer();
-	//void editUser();
+	void editUser();
+	void editCustomer();
 	//void changeSave();
 	//void callHistory();
 	//void viewSpecific();
@@ -64,6 +66,7 @@ private slots:
 	void showPopup();
 	void newUserPopup();
 	void popUpModifier(int index);
+	void popUpModifier2(int index);
 private:
 	//dbase db();
 	void excelPopup();
