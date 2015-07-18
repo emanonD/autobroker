@@ -4,6 +4,7 @@
 #include "msort.h"
 #include <sstream>
 #include <iostream>
+#include <QTime>
 
 using namespace std;
 dbase db;
@@ -539,6 +540,10 @@ void MainWindow::saveInput2()
         QDate presentDate=QDate::currentDate();
         QString presentDateQS=presentDate.toString("yyyy.MM.dd");
         string presentDateS=presentDateQS.toStdString();
+         QTime currentTime=QTime::currentTime();
+        QString cTimeString=currentTime.toString( Qt::TextDate);
+        string cTimeString2=cTimeString.toStdString();
+        presentDateS+="-"+cTimeString2;
         string nameS = nameInput->text().toStdString();
         for(int i=0; i<(int)nameS.size(); i++)
             if (nameS[i]==' ') nameS[i]='*';
@@ -570,6 +575,10 @@ void MainWindow::saveInput2()
         QDate selectedDate2 = editC->selectedDate();
         QString selectedDateQS2 = selectedDate2.toString("yyyy.MM.dd");
         string selectedDateS2 = selectedDateQS2.toStdString();
+       
+
+        
+       
 //cout<<selectedDateS2<<endl;
         newUser._callBackDate=selectedDateS2;
         db.addUser(newUser);
@@ -863,8 +872,12 @@ void MainWindow::showPopup()
 
 void MainWindow::saveInput()
 {   QDate presentDate=QDate::currentDate();
-    QString presentDateQS=presentDate.toString("yyyy.MM.dd");
-    string presentDateS=presentDateQS.toStdString();
+        QString presentDateQS=presentDate.toString("yyyy.MM.dd");
+        string presentDateS=presentDateQS.toStdString();
+         QTime currentTime=QTime::currentTime();
+        QString cTimeString=currentTime.toString( Qt::TextDate);
+        string cTimeString2=cTimeString.toStdString();
+        presentDateS+="-"+cTimeString2;
     string nameS = nameInput->text().toStdString();
     for(int i=0; i<(int)nameS.size(); i++)
         if (nameS[i]==' ') nameS[i]='*';
