@@ -608,7 +608,7 @@ void MainWindow::editUser()
                 string nameInput1 = "";
                 for (unsigned int j=0; j<tempN.size(); j++)
                 {
-                    nameInput1 = nameInput1+" "+tempN[j];
+                    nameInput1 += tempN[j]+" ";
                 }
                 nameInput= new QLineEdit(QString::fromStdString(nameInput1));
                 popWindow = new QDialog;
@@ -674,13 +674,13 @@ void MainWindow::editUser()
                 overallLayout->addWidget(editC);
                 //overallLayout->addWidget(Comment);
                 //overallLayout->addWidget(commentInput);
-                rowCount++;
+               // rowCount++;
                  db.users.erase(allUser[i]._key);
                 QPushButton* saveButton = new QPushButton("Save");
                 connect(saveButton, SIGNAL(clicked()), this, SLOT(saveInput()));
                 overallLayout->addWidget(saveButton);
-                popWindow->setLayout(overallLayout);
-                popWindow->exec();
+                popWindows->setLayout(overallLayout);
+                popWindows->exec();
             }
             }
     }
@@ -689,6 +689,8 @@ void MainWindow::editCustomer()
 {
     popWindows = new QDialog();
     popWindows->setWindowTitle("Edit User");
+    addTrigger1=0;
+    addTrigger2=0;
     if(customersWidget->currentRow()>=0)
     {
         int k=customersWidget->currentRow();
@@ -706,13 +708,14 @@ void MainWindow::editCustomer()
                 string nameInput1 = "";
                 for (unsigned int j=0; j<tempN.size(); j++)
                 {
-                    nameInput1 = nameInput1+" "+tempN[j];
+                    nameInput1 = nameInput1+tempN[j]+" ";
                 }
                 nameInput= new QLineEdit(QString::fromStdString(nameInput1));
                 popWindow = new QDialog;
-                popWindow->setWindowTitle("Add new Lead");
+                inputlhs = new QFormLayout();
+                popWindow->setWindowTitle("Edit Customer");
                 QVBoxLayout* overallLayout = new QVBoxLayout();
-                QFormLayout* inputlhs = new QFormLayout();
+               
                 QLabel* leftLabel=new QLabel("(");
                 QLabel* rightLabel=new QLabel(")");
                 QLabel* dashLabel=new QLabel("-");
@@ -771,10 +774,10 @@ void MainWindow::editCustomer()
     popWindow->exec();
                 //overallLayout->addWidget(Comment);
                 //overallLayout->addWidget(commentInput);
-                rowCount++;
-               
+                //rowCount++;
+               db.users.erase(allUser[i]._key);
             }
-            }
+         }
     }
 }
 /*void MainWindow::uploadP()
