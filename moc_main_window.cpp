@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'main_window.h'
 **
-** Created: Tue Aug 4 15:14:29 2015
+** Created: Tue Aug 4 15:43:30 2015
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      13,   14, // methods
+      14,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -36,24 +36,26 @@ static const uint qt_meta_data_MainWindow[] = {
       37,   11,   11,   11, 0x08,
       49,   11,   11,   11, 0x08,
       62,   11,   11,   11, 0x08,
-      75,   11,   11,   11, 0x08,
-      92,   11,   11,   11, 0x08,
-     103,   11,   11,   11, 0x08,
-     118,   11,   11,   11, 0x08,
-     129,   11,   11,   11, 0x08,
-     141,   11,   11,   11, 0x08,
-     162,  156,   11,   11, 0x08,
-     181,  156,   11,   11, 0x08,
+      72,   11,   11,   11, 0x08,
+      85,   11,   11,   11, 0x08,
+     102,   11,   11,   11, 0x08,
+     113,   11,   11,   11, 0x08,
+     128,   11,   11,   11, 0x08,
+     139,   11,   11,   11, 0x08,
+     151,   11,   11,   11, 0x08,
+     172,  166,   11,   11, 0x08,
+     191,  166,   11,   11, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_MainWindow[] = {
     "MainWindow\0\0selectFile()\0viewPopup()\0"
-    "saveInput()\0saveInput2()\0deleteLead()\0"
-    "deleteCustomer()\0editUser()\0editCustomer()\0"
-    "reminder()\0showPopup()\0newUserPopup()\0"
-    "index\0popUpModifier(int)\0popUpModifier2(int)\0"
+    "saveInput()\0saveInput2()\0dberase()\0"
+    "deleteLead()\0deleteCustomer()\0editUser()\0"
+    "editCustomer()\0reminder()\0showPopup()\0"
+    "newUserPopup()\0index\0popUpModifier(int)\0"
+    "popUpModifier2(int)\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -66,15 +68,16 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 1: _t->viewPopup(); break;
         case 2: _t->saveInput(); break;
         case 3: _t->saveInput2(); break;
-        case 4: _t->deleteLead(); break;
-        case 5: _t->deleteCustomer(); break;
-        case 6: _t->editUser(); break;
-        case 7: _t->editCustomer(); break;
-        case 8: _t->reminder(); break;
-        case 9: _t->showPopup(); break;
-        case 10: _t->newUserPopup(); break;
-        case 11: _t->popUpModifier((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 12: _t->popUpModifier2((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 4: _t->dberase(); break;
+        case 5: _t->deleteLead(); break;
+        case 6: _t->deleteCustomer(); break;
+        case 7: _t->editUser(); break;
+        case 8: _t->editCustomer(); break;
+        case 9: _t->reminder(); break;
+        case 10: _t->showPopup(); break;
+        case 11: _t->newUserPopup(); break;
+        case 12: _t->popUpModifier((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 13: _t->popUpModifier2((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -112,9 +115,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 13)
+        if (_id < 14)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 13;
+        _id -= 14;
     }
     return _id;
 }

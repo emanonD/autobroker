@@ -48,7 +48,8 @@ private slots:
 	void viewPopup();
 	void saveInput();
 	void saveInput2();
-	
+	//void dberase2();
+	void dberase();
 	void deleteLead();
 	void deleteCustomer();
 	void editUser();
@@ -69,6 +70,8 @@ private slots:
 	void popUpModifier2(int index);
 private:
 	//dbase db();
+	vector<user> allUser;
+	int tobeErased;
 	void excelPopup();
 	int addTrigger1;
 	int addTrigger2;

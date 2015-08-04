@@ -597,7 +597,7 @@ void MainWindow::editUser()
         leadsWidget->removeRow(k);
 
         vector<string> searchKey;
-        vector<user> allUser=db.search(searchKey);
+        allUser=db.search(searchKey);
         int rowCount=0;
         for (int i=0; i<allUser.size(); i++)
             if (!allUser[i]._new)
@@ -675,9 +675,11 @@ void MainWindow::editUser()
                 //overallLayout->addWidget(Comment);
                 //overallLayout->addWidget(commentInput);
                // rowCount++;
-                 db.users.erase(allUser[i]._key);
+                // db.users.erase(allUser[i]._key);
                 QPushButton* saveButton = new QPushButton("Save");
                 connect(saveButton, SIGNAL(clicked()), this, SLOT(saveInput()));
+                tobeErased=i;
+                connect(saveButton, SIGNAL(clicked()), this, SLOT(dberase()));
                 overallLayout->addWidget(saveButton);
                 popWindows->setLayout(overallLayout);
                 popWindows->exec();
@@ -697,7 +699,7 @@ void MainWindow::editCustomer()
         customersWidget->removeRow(k);
 
         vector<string> searchKey;
-        vector<user> allUser=db.search(searchKey);
+         allUser=db.search(searchKey);
         int rowCount=0;
         for (int i=0; i<allUser.size(); i++)
             if (allUser[i]._new)
@@ -769,16 +771,22 @@ void MainWindow::editCustomer()
     //overallLayout->addWidget(commentInput);
     QPushButton* saveButton = new QPushButton("Save");
     connect(saveButton, SIGNAL(clicked()), this, SLOT(saveInput2()));
+     tobeErased=i;
+    connect(saveButton, SIGNAL(clicked()), this, SLOT(dberase()));
     overallLayout->addWidget(saveButton);
     popWindow->setLayout(overallLayout);
     popWindow->exec();
                 //overallLayout->addWidget(Comment);
                 //overallLayout->addWidget(commentInput);
                 //rowCount++;
-               db.users.erase(allUser[i]._key);
+             // db.users.erase(allUser[i]._key);
             }
          }
     }
+}
+void MainWindow::dberase()
+{
+    db.users.erase(allUser[tobeErased]._key);
 }
 /*void MainWindow::uploadP()
 {
