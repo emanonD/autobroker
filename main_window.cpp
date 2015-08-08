@@ -88,12 +88,12 @@ void MainWindow::excelPopup()
     //customerButtons->addWidget(customerEdit);
     int leadnum=0;
     int customernum=0;
-    cout<<allUser.size();
+    cout<<(int)allUser.size();
     leadsWidget = new QTableWidget(leadnum, 14);	//leadsWidget->setRowCount(leadnum);
     customersWidget = new QTableWidget(customernum, 12);
     leadsWidget->setHorizontalHeaderLabels(leadHeaders);
     customersWidget->setHorizontalHeaderLabels(customerHeaders);
-    for (int i=0; i<allUser.size(); i++)
+    for (int i=0; i<(int)allUser.size(); i++)
         if (!allUser[i]._new)
         {
             leadsWidget->insertRow(leadnum);
@@ -102,6 +102,18 @@ void MainWindow::excelPopup()
             for (unsigned int j=0; j<tempN.size(); j++)
             {
                 nameInput1 = nameInput1+tempN[j]+" ";
+            }
+            tempN = allUser[i]._make;
+            string makeInput1 = "";
+            for (unsigned int j=0; j<tempN.size(); j++)
+            {
+                makeInput1 = makeInput1+tempN[j]+" ";
+            }
+            tempN = allUser[i]._model;
+            string modelInput1 = "";
+            for (unsigned int j=0; j<tempN.size(); j++)
+            {
+                modelInput1 = modelInput1+tempN[j]+" ";
             }
             cout<<nameInput1;
             QTableWidgetItem* dateItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._date));
@@ -112,9 +124,9 @@ void MainWindow::excelPopup()
             leadsWidget->setItem(leadnum,2, cellItem);
             QTableWidgetItem* emailItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._email));
             leadsWidget->setItem(leadnum,3, emailItem);
-            QTableWidgetItem* makeItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._make));
+            QTableWidgetItem* makeItem=new QTableWidgetItem(QString::fromStdString(makeInput1));
             leadsWidget->setItem(leadnum,4, makeItem);
-            QTableWidgetItem* modelItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._model));
+            QTableWidgetItem* modelItem=new QTableWidgetItem(QString::fromStdString(modelInput1));
             leadsWidget->setItem(leadnum,5, modelItem);
             QTableWidgetItem* exteriorItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._exterior));
             leadsWidget->setItem(leadnum,6, exteriorItem);
@@ -138,7 +150,7 @@ void MainWindow::excelPopup()
             leadsWidget->setItem(leadnum,13,orderNItem);
             leadnum++;
         }
-    for (int i=0; i<allUser.size(); i++)
+    for (int i=0; i<(int)allUser.size(); i++)
         if (allUser[i]._new)
         {
             customersWidget->insertRow(customernum);
@@ -147,6 +159,18 @@ void MainWindow::excelPopup()
             for (unsigned int j=0; j<tempN.size(); j++)
             {
                 nameInput1 = nameInput1+tempN[j]+" ";
+            }
+            tempN = allUser[i]._make;
+            string makeInput1 = "";
+            for (unsigned int j=0; j<tempN.size(); j++)
+            {
+                makeInput1 = makeInput1+tempN[j]+" ";
+            }
+            tempN = allUser[i]._model;
+            string modelInput1 = "";
+            for (unsigned int j=0; j<tempN.size(); j++)
+            {
+                modelInput1 = modelInput1+tempN[j]+" ";
             }
             cout<<nameInput1;
             QTableWidgetItem* dateItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._date));
@@ -157,9 +181,9 @@ void MainWindow::excelPopup()
             customersWidget->setItem(customernum,2, cellItem);
             QTableWidgetItem* emailItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._email));
             customersWidget->setItem(customernum,3, emailItem);
-            QTableWidgetItem* makeItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._make));
+            QTableWidgetItem* makeItem=new QTableWidgetItem(QString::fromStdString(makeInput1));
             customersWidget->setItem(customernum,4, makeItem);
-            QTableWidgetItem* modelItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._model));
+            QTableWidgetItem* modelItem=new QTableWidgetItem(QString::fromStdString(modelInput1));
             customersWidget->setItem(customernum,5, modelItem);
             if (allUser[i]._lease)
             {
@@ -217,7 +241,7 @@ void MainWindow::deleteLead()
         vector<string> searchKey;
         vector<user> allUser=db.search(searchKey);
         int rowCount=0;
-        for (int i=0; i<allUser.size(); i++)
+        for (int i=0; i<(int)allUser.size(); i++)
             if (!allUser[i]._new)
             {
                 if (rowCount==k)
@@ -237,7 +261,7 @@ void MainWindow::deleteCustomer()
         vector<string> searchKey;
         vector<user> allUser=db.search(searchKey);
         int rowCount=0;
-        for (int i=0; i<allUser.size(); i++)
+        for (int i=0; i<(int)allUser.size(); i++)
             if (allUser[i]._new)
             {
                 if (rowCount==k)
@@ -270,7 +294,7 @@ void MainWindow::viewPopup()
     customersWidget->clearContents();
     for(int i=0; i<customersWidget->rowCount(); i++)
         customersWidget->removeRow(0);
-    for (int i=0; i<allUser.size(); i++)
+    for (int i=0; i<(int)allUser.size(); i++)
         if (!allUser[i]._new)
         {
             leadsWidget->insertRow(leadnum);
@@ -279,6 +303,18 @@ void MainWindow::viewPopup()
             for (unsigned int j=0; j<tempN.size(); j++)
             {
                 nameInput1 = nameInput1+tempN[j]+" ";
+            }
+            tempN = allUser[i]._make;
+            string makeInput1 = "";
+            for (unsigned int j=0; j<tempN.size(); j++)
+            {
+                makeInput1 = makeInput1+tempN[j]+" ";
+            }
+            tempN = allUser[i]._model;
+            string modelInput1 = "";
+            for (unsigned int j=0; j<tempN.size(); j++)
+            {
+                modelInput1 = modelInput1+tempN[j]+" ";
             }
             //  cout<<nameInput1;
             QTableWidgetItem* dateItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._date));
@@ -290,9 +326,9 @@ void MainWindow::viewPopup()
             leadsWidget->setItem(leadnum,2, cellItem);
             QTableWidgetItem* emailItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._email));
             leadsWidget->setItem(leadnum,3, emailItem);
-            QTableWidgetItem* makeItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._make));
+            QTableWidgetItem* makeItem=new QTableWidgetItem(QString::fromStdString(makeInput1));
             leadsWidget->setItem(leadnum,4, makeItem);
-            QTableWidgetItem* modelItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._model));
+            QTableWidgetItem* modelItem=new QTableWidgetItem(QString::fromStdString(modelInput1));
             leadsWidget->setItem(leadnum,5, modelItem);
             QTableWidgetItem* exteriorItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._exterior));
             leadsWidget->setItem(leadnum,6, exteriorItem);
@@ -326,6 +362,18 @@ void MainWindow::viewPopup()
             {
                 nameInput1 = nameInput1+tempN[j]+" ";
             }
+            tempN = allUser[i]._make;
+            string makeInput1 = "";
+            for (unsigned int j=0; j<tempN.size(); j++)
+            {
+                makeInput1 = makeInput1+tempN[j]+" ";
+            }
+            tempN = allUser[i]._model;
+            string modelInput1 = "";
+            for (unsigned int j=0; j<tempN.size(); j++)
+            {
+                modelInput1 = modelInput1+tempN[j]+" ";
+            }
             cout<<nameInput1;
             QTableWidgetItem* dateItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._date));
             customersWidget->setItem(customernum,0, dateItem);
@@ -335,9 +383,9 @@ void MainWindow::viewPopup()
             customersWidget->setItem(customernum,2, cellItem);
             QTableWidgetItem* emailItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._email));
             customersWidget->setItem(customernum,3, emailItem);
-            QTableWidgetItem* makeItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._make));
+            QTableWidgetItem* makeItem=new QTableWidgetItem(QString::fromStdString(makeInput1));
             customersWidget->setItem(customernum,4, makeItem);
-            QTableWidgetItem* modelItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._model));
+            QTableWidgetItem* modelItem=new QTableWidgetItem(QString::fromStdString(modelInput1));
             customersWidget->setItem(customernum,5, modelItem);
             if (allUser[i]._lease)
             {
@@ -551,13 +599,17 @@ void MainWindow::saveInput2()
         string emailS = email->text().toStdString();
         //int purposeS=purpose->currentIndex();
         string make=makeInput->text().toStdString();
+        for(int i=0; i<(int)make.size(); i++)
+            if (make[i]==' ') make[i]='*';
         string model=modelInput->text().toStdString();
+        for(int i=0; i<(int)model.size(); i++)
+            if (model[i]==' ') model[i]='*';
         string orderN=orderNInput->text().toStdString();
         user newUser(nameS,presentDateS,cellS);
         newUser._orderNumber=orderN;
         newUser._email=emailS;
-        newUser._make=make;
-        newUser._model=model;
+        newUser._make=producer(make);
+        newUser._model=producer(model);
         if (purpose->currentIndex()==1)
         {
             newUser._dotd=atoi(dotdInput->text().toStdString().c_str());
@@ -599,7 +651,7 @@ void MainWindow::editUser()
         vector<string> searchKey;
         allUser=db.search(searchKey);
         int rowCount=0;
-        for (int i=0; i<allUser.size(); i++)
+        for (int i=0; i<(int)allUser.size(); i++)
             if (!allUser[i]._new)
             {
                 if (rowCount==k)
@@ -610,6 +662,18 @@ void MainWindow::editUser()
                 {
                     nameInput1 += tempN[j]+" ";
                 }
+                tempN = allUser[i]._make;
+            string makeInput1 = "";
+            for (unsigned int j=0; j<tempN.size(); j++)
+            {
+                makeInput1 = makeInput1+tempN[j]+" ";
+            }
+             tempN = allUser[i]._model;
+            string modelInput1 = "";
+            for (unsigned int j=0; j<tempN.size(); j++)
+            {
+                modelInput1 = modelInput1+tempN[j]+" ";
+            }
                 nameInput= new QLineEdit(QString::fromStdString(nameInput1));
                 popWindow = new QDialog;
                 popWindow->setWindowTitle("Add new Lead");
@@ -642,9 +706,9 @@ void MainWindow::editUser()
                 inputlhs->addRow(tr("Cell:"),cellLayout);
                 email = new QLineEdit(QString::fromStdString(temp._email));
                 inputlhs->addRow(tr("&Email:"),email);
-                makeInput = new QLineEdit(QString::fromStdString(temp._make));
+                makeInput = new QLineEdit(QString::fromStdString(makeInput1));
                 inputlhs->addRow(tr("&Make:"),makeInput);
-                modelInput = new QLineEdit(QString::fromStdString(temp._model));
+                modelInput = new QLineEdit(QString::fromStdString(modelInput1));
                 inputlhs->addRow(tr("&Model:"),modelInput);
                 colorInput2 = new QLineEdit(QString::fromStdString(temp._exterior));
                 inputlhs->addRow(tr("&Exterior Color:"),colorInput2);
@@ -701,7 +765,7 @@ void MainWindow::editCustomer()
         vector<string> searchKey;
          allUser=db.search(searchKey);
         int rowCount=0;
-        for (int i=0; i<allUser.size(); i++)
+        for (int i=0; i<(int)allUser.size(); i++)
             if (allUser[i]._new)
             {
                 if (rowCount==k)
@@ -712,6 +776,18 @@ void MainWindow::editCustomer()
                 {
                     nameInput1 = nameInput1+tempN[j]+" ";
                 }
+                tempN = allUser[i]._make;
+            string makeInput1 = "";
+            for (unsigned int j=0; j<tempN.size(); j++)
+            {
+                makeInput1 = makeInput1+tempN[j]+" ";
+            }
+             tempN = allUser[i]._model;
+            string modelInput1 = "";
+            for (unsigned int j=0; j<tempN.size(); j++)
+            {
+                modelInput1 = modelInput1+tempN[j]+" ";
+            }
                 nameInput= new QLineEdit(QString::fromStdString(nameInput1));
                 popWindow = new QDialog;
                 inputlhs = new QFormLayout();
@@ -745,9 +821,9 @@ void MainWindow::editCustomer()
                 inputlhs->addRow(tr("Cell:"),cellLayout);
                 email = new QLineEdit(QString::fromStdString(temp._email));
                 inputlhs->addRow(tr("&Email:"),email);
-                makeInput = new QLineEdit(QString::fromStdString(temp._make));
+                makeInput = new QLineEdit(QString::fromStdString(makeInput1));
                 inputlhs->addRow(tr("&Make:"),makeInput);
-                modelInput = new QLineEdit(QString::fromStdString(temp._model));
+                modelInput = new QLineEdit(QString::fromStdString(modelInput1));
                 inputlhs->addRow(tr("&Model:"),modelInput);
                 colorInput2 = new QLineEdit(QString::fromStdString(temp._exterior));
                  purpose = new QComboBox();
@@ -896,7 +972,11 @@ void MainWindow::saveInput()
     string emailS = email->text().toStdString();
     //int purposeS=purpose->currentIndex();
     string make=makeInput->text().toStdString();
+    for(int i=0; i<(int)make.size(); i++)
+        if (make[i]==' ') make[i]='*';
     string model=modelInput->text().toStdString();
+     for(int i=0; i<(int)model.size(); i++)
+        if (model[i]==' ') model[i]='*';
     string exterior=colorInput2->text().toStdString();
     string interior=colorInput->text().toStdString();
     string year=yearInput->text().toStdString();
@@ -907,8 +987,8 @@ void MainWindow::saveInput()
     user newUser(nameS,presentDateS,cellS);
     newUser._orderNumber=orderN;
     newUser._email=emailS;
-    newUser._make=make;
-    newUser._model=model;
+    newUser._make=producer(make);
+    newUser._model=producer(model);
     newUser._exterior=exterior;
     newUser._interior=interior;
     newUser._year=year;
@@ -944,6 +1024,24 @@ void MainWindow::saveToBackup()
     ofstream of("database.txt");
     db.dump(of);
     of.close();
+}
+vector<string> MainWindow::producer(string s)
+{
+    vector<string> toReturn;
+    int lastloc=0; 
+        if (s[0]==' ')
+            s=s.substr(1);
+    
+    for(int i=0;i<(int)s.size();i++)
+    {
+        if (s[i]=='*')
+        {
+            toReturn.push_back(s.substr(lastloc,i-lastloc));        
+            lastloc=i+1;
+        }       
+    }
+    toReturn.push_back(s.substr(lastloc,s.size()-lastloc));
+    return toReturn;
 }
 
 /*void MainWindow::choice()

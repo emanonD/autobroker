@@ -70,6 +70,7 @@ private slots:
 	void popUpModifier2(int index);
 private:
 	//dbase db();
+	vector<string> producer(string s);
 	vector<user> allUser;
 	int tobeErased;
 	void excelPopup();
