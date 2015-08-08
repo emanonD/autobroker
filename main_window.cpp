@@ -52,7 +52,7 @@ void MainWindow::excelPopup()
     QStringList leadHeaders;
     leadHeaders<<"date"<<"name"<<"cell"<<"Email"<<"Make"<<"Model"<<"Exterior"<<"Interior"<<"Year"<<"MSRP"<<"Options"<<"PriceQuoted"<<"Purpose"<<"Order Number";
     QStringList customerHeaders;
-    customerHeaders<<"date"<<"name"<<"cell"<<"Email"<<"Make"<<"Model"<<"Down Payment"<<"Term"<<"Miles/Year"<<"Dotd"<<"purpose"<<"Order Number";
+    customerHeaders<<"date"<<"name"<<"cell"<<"Email"<<"Make"<<"Model"<<"Down Payment"<<"Term"<<"monthly payment"<<"Miles/Year"<<"Dotd"<<"purpose"<<"Order Number";
     vector<string> searchKey;
     vector<user> allUser=db.search(searchKey);
     QHBoxLayout* leadButtons=new QHBoxLayout();
@@ -96,7 +96,7 @@ void MainWindow::excelPopup()
     int customernum=0;
    // cout<<(int)allUser.size();
     leadsWidget = new QTableWidget(leadnum, 14);	//leadsWidget->setRowCount(leadnum);
-    customersWidget = new QTableWidget(customernum, 12);
+    customersWidget = new QTableWidget(customernum, 13);
     leadsWidget->setHorizontalHeaderLabels(leadHeaders);
     customersWidget->setHorizontalHeaderLabels(customerHeaders);
     for (int i=0; i<(int)allUser.size(); i++)
@@ -197,22 +197,24 @@ void MainWindow::excelPopup()
                 customersWidget->setItem(customernum,6, downItem);
                 QTableWidgetItem* termItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._term));
                 customersWidget->setItem(customernum,7, termItem);
+                QTableWidgetItem* monthlyItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._monthly));
+                customersWidget->setItem(customernum,8, monthlyItem);
                 QTableWidgetItem* milesItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._miles));
-                customersWidget->setItem(customernum,8, milesItem);
+                customersWidget->setItem(customernum,9, milesItem);
             }
             else
             {
                 QTableWidgetItem* dotdItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._dotd));
-                customersWidget->setItem(customernum,9, dotdItem);
+                customersWidget->setItem(customernum,10, dotdItem);
             }
             QTableWidgetItem* purposeItem;
             if (allUser[i]._lease)
                 purposeItem=new QTableWidgetItem("lease");
             else
                 purposeItem=new QTableWidgetItem("Purchase");
-            customersWidget->setItem(i,10, purposeItem);
+            customersWidget->setItem(i,11, purposeItem);
             QTableWidgetItem* orderNItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._orderNumber));
-            customersWidget->setItem(leadnum,11,orderNItem);
+            customersWidget->setItem(leadnum,12,orderNItem);
             customernum++;
 
         }
@@ -408,26 +410,32 @@ void MainWindow::viewPopup()
                 customersWidget->setItem(customernum,6, downItem);
                 QTableWidgetItem* termItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._term));
                 customersWidget->setItem(customernum,7, termItem);
+                QTableWidgetItem* monthlyItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._monthly));
+                customersWidget->setItem(customernum,8, monthlyItem);
                 QTableWidgetItem* milesItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._miles));
-                customersWidget->setItem(customernum,8, milesItem);
+                customersWidget->setItem(customernum,9, milesItem);
             }
             else
             {
                 QTableWidgetItem* dotdItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._dotd));
-                customersWidget->setItem(customernum,9, dotdItem);
+                customersWidget->setItem(customernum,10, dotdItem);
             }
             QTableWidgetItem* purposeItem;
             if (allUser[i]._lease)
                 purposeItem=new QTableWidgetItem("lease");
             else
                 purposeItem=new QTableWidgetItem("Purchase");
-            customersWidget->setItem(customernum,10, purposeItem);
+            customersWidget->setItem(customernum,11, purposeItem);
             QTableWidgetItem* orderNItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._orderNumber));
-            customersWidget->setItem(leadnum,11,orderNItem);
+            customersWidget->setItem(leadnum,12,orderNItem);
             customernum++;
         }
     leadsWidget->setSortingEnabled(true);
     customersWidget->setSortingEnabled(true);
+    /*int k=leadsWidget->rowCount();
+    for (int i=1;i<k-1;i++)
+        if (leadsWidget->item(i,0)->text().toStdString()=="")
+            leadsWidget->removeRow();*/
 }
 void MainWindow::reminder()
 {
@@ -565,6 +573,8 @@ void MainWindow::popUpModifier(int index)
         inputlhs->addRow(tr("DownPayment:"),downInput);
         termInput = new QLineEdit("");
         inputlhs->addRow(tr("Term:"),termInput);
+        monthlyInput = new QLineEdit("");
+        inputlhs->addRow(tr("Monthly Pay:"),monthlyInput);
         milesInput = new QLineEdit("");
         inputlhs->addRow(tr("Miles/Year:"),milesInput);
         addTrigger2=1;
@@ -586,6 +596,8 @@ void MainWindow::popUpModifier2(int index)
         inputlhs->addRow(tr("DownPayment:"),downInput);
         termInput = new QLineEdit("");
         inputlhs->addRow(tr("Term:"),termInput);
+            monthlyInput = new QLineEdit("");
+        inputlhs->addRow(tr("Monthly Pay:"),monthlyInput);
         milesInput = new QLineEdit("");
         inputlhs->addRow(tr("Miles/Year:"),milesInput);
         addTrigger2=1;
@@ -633,6 +645,7 @@ void MainWindow::saveInput2()
         {
             newUser._down=atoi(downInput->text().toStdString().c_str());
             newUser._term=atoi(termInput->text().toStdString().c_str());
+            newUser._monthly=atoi(monthlyInput->text().toStdString().c_str());
             newUser._miles=atoi(milesInput->text().toStdString().c_str());
         }
         newUser._new=1;
@@ -656,8 +669,8 @@ void MainWindow::saveInput2()
 
 void MainWindow::editUser()
 {
-    popWindows = new QDialog();
-    popWindows->setWindowTitle("Edit User");
+    popWindow = new QDialog();
+    popWindow->setWindowTitle("Edit User");
     if(leadsWidget->currentRow()>=0)
     {
      //   cout<<leadsWidget->currentRow()<<endl;
@@ -666,12 +679,10 @@ void MainWindow::editUser()
 
         vector<string> searchKey;
         allUser=db.search(searchKey);
-        cout<<(int)allUser.size();
-        cout<<"akgfbiajskf";
+       
      //   int rowCount=0;
         for (int i=0; i<(int)allUser.size(); i++)
             {
-                 cout<<allUser[i]._date<<"   "<<allUser[i]._name[0]<<" "<<leadsWidget->item(k,0)->text().toStdString()<<endl;
                 if ((allUser[i]._date)==(leadsWidget->item(k,0)->text().toStdString()))
                 {  
                     cout<<allUser[i]._date<<" "<<leadsWidget->item(k,0)->text().toStdString()<<endl;
@@ -766,23 +777,22 @@ void MainWindow::editUser()
                     tobeErased=i;
                     connect(saveButton, SIGNAL(clicked()), this, SLOT(dberase()));
                     overallLayout->addWidget(saveButton);
-                    popWindows->setLayout(overallLayout);
-                    popWindows->exec();
+                    popWindow->setLayout(overallLayout);
+                    popWindow->exec();
+                    break;
                 }
             }
     }
 }
 void MainWindow::editCustomer()
 {
-    popWindows = new QDialog();
-    popWindows->setWindowTitle("Edit User");
+    popWindow = new QDialog();
+    popWindow->setWindowTitle("Edit User");
     addTrigger1=0;
     addTrigger2=0;
     if(customersWidget->currentRow()>=0)
     {
         int k=customersWidget->currentRow();
-        customersWidget->removeRow(k);
-
         vector<string> searchKey;
         allUser=db.search(searchKey);
         int rowCount=0;
@@ -874,6 +884,7 @@ void MainWindow::editCustomer()
                     popWindow->exec();
                     //overallLayout->addWidget(Comment);
                     //overallLayout->addWidget(commentInput);
+                    break;
                     rowCount++;
                     // db.users.erase(allUser[i]._key);
                 }
@@ -1026,7 +1037,7 @@ void MainWindow::saveInput()
     //newUser._callHistory.push_back(callH);
     //newUser._callHistoryNum=newUser._callHistory.size();
     db.addUser(newUser);
-    viewPopup();
+  //  viewPopup();
     saveSuccess();
 }
 void MainWindow::saveSuccess()

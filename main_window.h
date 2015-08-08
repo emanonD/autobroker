@@ -121,6 +121,7 @@ private:
 	QLineEdit* optionsInput;
 	QLineEdit* dotdInput;
 	QLineEdit* downInput;
+	QLineEdit* monthlyInput;
 	QLineEdit* termInput;
 	QLineEdit* milesInput;
 	QLineEdit* orderNInput;
