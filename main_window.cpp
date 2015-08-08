@@ -72,23 +72,29 @@ void MainWindow::excelPopup()
     leadButtons->addWidget(inputFile);
     leadButtons->addWidget(leadEdit);
     connect(leadEdit, SIGNAL(clicked()), this, SLOT(editUser()));
+    connect(leadEdit, SIGNAL(clicked()), this, SLOT(viewPopup()));
     connect(leadDelete, SIGNAL(clicked()), this, SLOT(deleteLead()));
+    connect(leadDelete, SIGNAL(clicked()), this, SLOT(viewPopup()));
+   
     leadButtons->addWidget(leadDelete);
     // leadButtons->addWidget(leadEdit);
     QHBoxLayout* customerButtons=new QHBoxLayout();
     QPushButton* customerDelete=new QPushButton("Delete");
     customerDelete->setMaximumWidth(200);
     connect(customerDelete, SIGNAL(clicked()), this, SLOT(deleteCustomer()));
+    connect(customerDelete, SIGNAL(clicked()), this, SLOT(viewPopup()));
     QPushButton* customerEdit=new QPushButton("edit");
     customerEdit->setMaximumWidth(200);
     customerButtons->addWidget(searchFile);
     customerButtons->addWidget(customerEdit);
     customerButtons->addWidget(customerDelete);
+
     connect(customerEdit,SIGNAL(clicked()), this, SLOT(editCustomer()));
+     connect(customerEdit, SIGNAL(clicked()), this, SLOT(viewPopup()));
     //customerButtons->addWidget(customerEdit);
     int leadnum=0;
     int customernum=0;
-    cout<<(int)allUser.size();
+   // cout<<(int)allUser.size();
     leadsWidget = new QTableWidget(leadnum, 14);	//leadsWidget->setRowCount(leadnum);
     customersWidget = new QTableWidget(customernum, 12);
     leadsWidget->setHorizontalHeaderLabels(leadHeaders);
@@ -115,7 +121,7 @@ void MainWindow::excelPopup()
             {
                 modelInput1 = modelInput1+tempN[j]+" ";
             }
-            cout<<nameInput1;
+           // cout<<nameInput1;
             QTableWidgetItem* dateItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._date));
             leadsWidget->setItem(leadnum,0, dateItem);
             QTableWidgetItem* nameItem=new QTableWidgetItem(QString::fromStdString(nameInput1));
@@ -172,7 +178,7 @@ void MainWindow::excelPopup()
             {
                 modelInput1 = modelInput1+tempN[j]+" ";
             }
-            cout<<nameInput1;
+           // cout<<nameInput1;
             QTableWidgetItem* dateItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._date));
             customersWidget->setItem(customernum,0, dateItem);
             QTableWidgetItem* nameItem=new QTableWidgetItem(QString::fromStdString(nameInput1));
@@ -235,20 +241,29 @@ void MainWindow::deleteLead()
 {
     if(leadsWidget->currentRow()>=0)
     {
-        int k=leadsWidget->currentRow();
-        leadsWidget->removeRow(k);
+       int k=leadsWidget->currentRow();
+     //  if (k>0) leadsWidget->removeRow(k);
+      // else leadsWidget->removeRow(1);
 
         vector<string> searchKey;
         vector<user> allUser=db.search(searchKey);
+        for(int i=0;i<allUser.size();i++)
+            cout<<allUser[i]._name[0]<<endl;
+      //  for(int i=0;i<10;i++)
+           // cout<<leadsWidget->item(i,k)->text().toStdString()<<endl;
         int rowCount=0;
         for (int i=0; i<(int)allUser.size(); i++)
-            if (!allUser[i]._new)
             {
-                if (rowCount==k)
+                cout<<allUser[i]._date<<"   "<<leadsWidget->item(k,0)->text().toStdString();
+                if ((allUser[i]._date)==(leadsWidget->item(k,0)->text().toStdString()))
+                   { 
+                    cout<<allUser[i]._name[0]<<endl;
                     db.users.erase(allUser[i]._key);
+                   }
                 rowCount++;
             }
     }
+
     saveToBackup();
 }
 void MainWindow::deleteCustomer()
@@ -256,15 +271,15 @@ void MainWindow::deleteCustomer()
     if(customersWidget->currentRow()>=0)
     {
         int k=customersWidget->currentRow();
-        customersWidget->removeRow(k);
-
+      //  customersWidget->removeRow(k);
+//
         vector<string> searchKey;
         vector<user> allUser=db.search(searchKey);
         int rowCount=0;
         for (int i=0; i<(int)allUser.size(); i++)
             if (allUser[i]._new)
             {
-                if (rowCount==k)
+               if ((allUser[i]._date)==(customersWidget->item(k,0)->text().toStdString()))
                     db.users.erase(allUser[i]._key);
                 rowCount++;
             }
@@ -319,7 +334,7 @@ void MainWindow::viewPopup()
             //  cout<<nameInput1;
             QTableWidgetItem* dateItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._date));
             leadsWidget->setItem(leadnum,0, dateItem);
-            cout<<"leadnum: "<<leadnum<<" "<<nameInput1<<endl;
+           // cout<<"leadnum: "<<leadnum<<" "<<nameInput1<<endl;
             QTableWidgetItem* nameItem=new QTableWidgetItem(QString::fromStdString(nameInput1));
             leadsWidget->setItem(leadnum,1, nameItem);
             QTableWidgetItem* cellItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._cell));
@@ -374,7 +389,7 @@ void MainWindow::viewPopup()
             {
                 modelInput1 = modelInput1+tempN[j]+" ";
             }
-            cout<<nameInput1;
+           // cout<<nameInput1;
             QTableWidgetItem* dateItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._date));
             customersWidget->setItem(customernum,0, dateItem);
             QTableWidgetItem* nameItem=new QTableWidgetItem(QString::fromStdString(nameInput1));
@@ -428,11 +443,11 @@ void MainWindow::reminder()
 
     QString presentDateQS4=QDate::currentDate().toString("yyyy.MM.dd");
     string qdate = presentDateQS4.toStdString();
-    cout << db.findDate(qdate).size() << " size" << endl;
+   // cout << db.findDate(qdate).size() << " size" << endl;
     for (unsigned int i=0; i<db.findDate(qdate).size(); i++)
     {
         string display = db.findDate(qdate)[i].displayString();
-        cout << display << endl;
+      //  cout << display << endl;
         reminderList->addItem(QString::fromStdString(display));
     }
     QLabel* tmrLabel=new QLabel("Tomorrow:");
@@ -441,7 +456,7 @@ void MainWindow::reminder()
     overallLayout->addWidget(tmrList);
     presentDateQS4=QDate::currentDate().addDays(1).toString("yyyy.MM.dd");
     qdate = presentDateQS4.toStdString();
-    cout << db.findDate(qdate).size() << " size" << endl;
+  //  cout << db.findDate(qdate).size() << " size" << endl;
     for (unsigned int i=0; i<db.findDate(qdate).size(); i++)
     {
         string display = db.findDate(qdate)[i].displayString();
@@ -457,11 +472,11 @@ void MainWindow::reminder()
     {
         presentDateQS4=QDate::currentDate().addDays(i).toString("yyyy.MM.dd");
         qdate = presentDateQS4.toStdString();
-        cout << db.findDate(qdate).size() << " size" << endl;
+      //  cout << db.findDate(qdate).size() << " size" << endl;
         for (unsigned int i=0; i<db.findDate(qdate).size(); i++)
         {
             string display = db.findDate(qdate)[i].displayString();
-            cout << display << endl;
+          //  cout << display << endl;
             weekList->addItem(QString::fromStdString(display));
         }
     }
@@ -581,14 +596,14 @@ void MainWindow::popUpModifier2(int index)
 void MainWindow::saveInput2()
 
 {
-	addTrigger1=0;
+    addTrigger1=0;
     addTrigger2=0;
     if(purpose->currentIndex()>0)
     {
         QDate presentDate=QDate::currentDate();
         QString presentDateQS=presentDate.toString("yyyy.MM.dd");
         string presentDateS=presentDateQS.toStdString();
-         QTime currentTime=QTime::currentTime();
+        QTime currentTime=QTime::currentTime();
         QString cTimeString=currentTime.toString( Qt::TextDate);
         string cTimeString2=cTimeString.toStdString();
         presentDateS+="-"+cTimeString2;
@@ -627,10 +642,10 @@ void MainWindow::saveInput2()
         QDate selectedDate2 = editC->selectedDate();
         QString selectedDateQS2 = selectedDate2.toString("yyyy.MM.dd");
         string selectedDateS2 = selectedDateQS2.toStdString();
-       
 
-        
-       
+
+
+
 //cout<<selectedDateS2<<endl;
         newUser._callBackDate=selectedDateS2;
         db.addUser(newUser);
@@ -645,109 +660,115 @@ void MainWindow::editUser()
     popWindows->setWindowTitle("Edit User");
     if(leadsWidget->currentRow()>=0)
     {
+     //   cout<<leadsWidget->currentRow()<<endl;
         int k=leadsWidget->currentRow();
-        leadsWidget->removeRow(k);
+      //  leadsWidget->removeRow(k);
 
         vector<string> searchKey;
         allUser=db.search(searchKey);
-        int rowCount=0;
+        cout<<(int)allUser.size();
+        cout<<"akgfbiajskf";
+     //   int rowCount=0;
         for (int i=0; i<(int)allUser.size(); i++)
-            if (!allUser[i]._new)
             {
-                if (rowCount==k)
-                {    user temp =allUser[i];
-                vector<string> tempN = temp._name;
-                string nameInput1 = "";
-                for (unsigned int j=0; j<tempN.size(); j++)
-                {
-                    nameInput1 += tempN[j]+" ";
+                 cout<<allUser[i]._date<<"   "<<allUser[i]._name[0]<<" "<<leadsWidget->item(k,0)->text().toStdString()<<endl;
+                if ((allUser[i]._date)==(leadsWidget->item(k,0)->text().toStdString()))
+                {  
+                    cout<<allUser[i]._date<<" "<<leadsWidget->item(k,0)->text().toStdString()<<endl;
+                    cout<<allUser[i]._name[0]<<endl;
+                    user temp =allUser[i];
+                    vector<string> tempN = temp._name;
+                    string nameInput1 = "";
+                    for (unsigned int j=0; j<tempN.size(); j++)
+                    {
+                        nameInput1 += tempN[j]+" ";
+                    }
+                    tempN = allUser[i]._make;
+                    string makeInput1 = "";
+                    for (unsigned int j=0; j<tempN.size(); j++)
+                    {
+                        makeInput1 = makeInput1+tempN[j]+" ";
+                    }
+                    tempN = allUser[i]._model;
+                    string modelInput1 = "";
+                    for (unsigned int j=0; j<tempN.size(); j++)
+                    {
+                        modelInput1 = modelInput1+tempN[j]+" ";
+                    }
+                    nameInput= new QLineEdit(QString::fromStdString(nameInput1));
+                    popWindow = new QDialog;
+                    popWindow->setWindowTitle("Add new Lead");
+                    QVBoxLayout* overallLayout = new QVBoxLayout();
+                    QFormLayout* inputlhs = new QFormLayout();
+                    QLabel* leftLabel=new QLabel("(");
+                    QLabel* rightLabel=new QLabel(")");
+                    QLabel* dashLabel=new QLabel("-");
+                    nameInput = new QLineEdit(QString::fromStdString(nameInput1));
+                    cellLayout=new QHBoxLayout();
+                    if(temp._cell.size()>=3)
+                        cell1=new QLineEdit(QString::fromStdString(temp._cell.substr(0,3)));
+                    else cell1=new QLineEdit("");
+                    if(temp._cell.size()>=6)
+                        cell2=new QLineEdit(QString::fromStdString(temp._cell.substr(3,3)));
+                    else cell2=new QLineEdit("");
+                    if(temp._cell.size()>=10)
+                        cell3=new QLineEdit(QString::fromStdString(temp._cell.substr(6,4)));
+                    else cell3=new QLineEdit("");
+                    cellLayout->addWidget(leftLabel);
+                    cellLayout->addWidget(cell1);
+                    cellLayout->addWidget(rightLabel);
+                    // cellLayout->addWidget(dashLabel);
+                    cellLayout->addWidget(cell2);
+                    cellLayout->addWidget(dashLabel);
+                    cellLayout->addWidget(cell3);
+                    inputlhs->addRow(tr("&Name:"),nameInput);
+                    orderNInput=new QLineEdit(QString::fromStdString(temp._orderNumber));
+                    inputlhs->addRow(tr("Order Number:"),orderNInput);
+                    inputlhs->addRow(tr("Cell:"),cellLayout);
+                    email = new QLineEdit(QString::fromStdString(temp._email));
+                    inputlhs->addRow(tr("&Email:"),email);
+                    makeInput = new QLineEdit(QString::fromStdString(makeInput1));
+                    inputlhs->addRow(tr("&Make:"),makeInput);
+                    modelInput = new QLineEdit(QString::fromStdString(modelInput1));
+                    inputlhs->addRow(tr("&Model:"),modelInput);
+                    colorInput2 = new QLineEdit(QString::fromStdString(temp._exterior));
+                    inputlhs->addRow(tr("&Exterior Color:"),colorInput2);
+                    colorInput = new QLineEdit(QString::fromStdString(temp._interior));
+                    inputlhs->addRow(tr("&Interior Color:"),colorInput);
+                    yearInput = new QLineEdit(QString::fromStdString(temp._year));
+                    inputlhs->addRow(tr("&Year:"),yearInput);
+                    msrpInput = new QLineEdit(QString::fromStdString(temp._msrp));
+                    inputlhs->addRow(tr("&MSRP:"),msrpInput);
+                    optionsInput = new QLineEdit(QString::fromStdString(temp._options));
+                    inputlhs->addRow(tr("&options:"),optionsInput);
+                    priceInput = new QLineEdit(QString::fromStdString(temp._price));
+                    inputlhs->addRow(tr("&PriceQuoted:"),priceInput);
+                    overallLayout->addLayout(inputlhs);
+                    purpose = new QComboBox();
+                    QLabel* purposeLabel = new QLabel("Purpose:");
+                    purpose->addItem("Purchasing");
+                    purpose->addItem("Leasing");
+                    QLabel* callDate = new QLabel("Select CallBack Date:");
+                    editC = new QCalendarWidget;
+                    editC->setGridVisible(true);
+                    //QLabel* Comment = new QLabel("Comments:");
+                    commentInput = new QTextEdit();
+                    overallLayout->addWidget(purposeLabel);
+                    overallLayout->addWidget(purpose);
+                    overallLayout->addWidget(callDate);
+                    overallLayout->addWidget(editC);
+                    //overallLayout->addWidget(Comment);
+                    //overallLayout->addWidget(commentInput);
+                   // rowCount++;
+                    // db.users.erase(allUser[i]._key);
+                    QPushButton* saveButton = new QPushButton("Save");
+                    connect(saveButton, SIGNAL(clicked()), this, SLOT(saveInput()));
+                    tobeErased=i;
+                    connect(saveButton, SIGNAL(clicked()), this, SLOT(dberase()));
+                    overallLayout->addWidget(saveButton);
+                    popWindows->setLayout(overallLayout);
+                    popWindows->exec();
                 }
-                tempN = allUser[i]._make;
-            string makeInput1 = "";
-            for (unsigned int j=0; j<tempN.size(); j++)
-            {
-                makeInput1 = makeInput1+tempN[j]+" ";
-            }
-             tempN = allUser[i]._model;
-            string modelInput1 = "";
-            for (unsigned int j=0; j<tempN.size(); j++)
-            {
-                modelInput1 = modelInput1+tempN[j]+" ";
-            }
-                nameInput= new QLineEdit(QString::fromStdString(nameInput1));
-                popWindow = new QDialog;
-                popWindow->setWindowTitle("Add new Lead");
-                QVBoxLayout* overallLayout = new QVBoxLayout();
-                QFormLayout* inputlhs = new QFormLayout();
-                QLabel* leftLabel=new QLabel("(");
-                QLabel* rightLabel=new QLabel(")");
-                QLabel* dashLabel=new QLabel("-");
-                nameInput = new QLineEdit(QString::fromStdString(nameInput1));
-                cellLayout=new QHBoxLayout();
-                if(temp._cell.size()>=3)
-                cell1=new QLineEdit(QString::fromStdString(temp._cell.substr(0,3)));
-            else cell1=new QLineEdit("");
-          		  if(temp._cell.size()>=6)
-                cell2=new QLineEdit(QString::fromStdString(temp._cell.substr(3,3)));
-            else cell2=new QLineEdit("");
-                if(temp._cell.size()>=10)
-                cell3=new QLineEdit(QString::fromStdString(temp._cell.substr(6,4)));
-            else cell3=new QLineEdit("");
-                cellLayout->addWidget(leftLabel);
-                cellLayout->addWidget(cell1);
-                cellLayout->addWidget(rightLabel);
-                // cellLayout->addWidget(dashLabel);
-                cellLayout->addWidget(cell2);
-                cellLayout->addWidget(dashLabel);
-                cellLayout->addWidget(cell3);
-                inputlhs->addRow(tr("&Name:"),nameInput);
-                orderNInput=new QLineEdit(QString::fromStdString(temp._orderNumber));
-                inputlhs->addRow(tr("Order Number:"),orderNInput);
-                inputlhs->addRow(tr("Cell:"),cellLayout);
-                email = new QLineEdit(QString::fromStdString(temp._email));
-                inputlhs->addRow(tr("&Email:"),email);
-                makeInput = new QLineEdit(QString::fromStdString(makeInput1));
-                inputlhs->addRow(tr("&Make:"),makeInput);
-                modelInput = new QLineEdit(QString::fromStdString(modelInput1));
-                inputlhs->addRow(tr("&Model:"),modelInput);
-                colorInput2 = new QLineEdit(QString::fromStdString(temp._exterior));
-                inputlhs->addRow(tr("&Exterior Color:"),colorInput2);
-                colorInput = new QLineEdit(QString::fromStdString(temp._interior));
-                inputlhs->addRow(tr("&Interior Color:"),colorInput);
-                yearInput = new QLineEdit(QString::fromStdString(temp._year));
-                inputlhs->addRow(tr("&Year:"),yearInput);
-                msrpInput = new QLineEdit(QString::fromStdString(temp._msrp));
-                inputlhs->addRow(tr("&MSRP:"),msrpInput);
-                optionsInput = new QLineEdit(QString::fromStdString(temp._options));
-                inputlhs->addRow(tr("&options:"),optionsInput);
-                priceInput = new QLineEdit(QString::fromStdString(temp._price));
-                inputlhs->addRow(tr("&PriceQuoted:"),priceInput);
-                overallLayout->addLayout(inputlhs);
-                purpose = new QComboBox();
-                QLabel* purposeLabel = new QLabel("Purpose:");
-                purpose->addItem("Purchasing");
-                purpose->addItem("Leasing");
-                QLabel* callDate = new QLabel("Select CallBack Date:");
-                editC = new QCalendarWidget;
-                editC->setGridVisible(true);
-                //QLabel* Comment = new QLabel("Comments:");
-                commentInput = new QTextEdit();
-                overallLayout->addWidget(purposeLabel);
-                overallLayout->addWidget(purpose);
-                overallLayout->addWidget(callDate);
-                overallLayout->addWidget(editC);
-                //overallLayout->addWidget(Comment);
-                //overallLayout->addWidget(commentInput);
-               // rowCount++;
-                // db.users.erase(allUser[i]._key);
-                QPushButton* saveButton = new QPushButton("Save");
-                connect(saveButton, SIGNAL(clicked()), this, SLOT(saveInput()));
-                tobeErased=i;
-                connect(saveButton, SIGNAL(clicked()), this, SLOT(dberase()));
-                overallLayout->addWidget(saveButton);
-                popWindows->setLayout(overallLayout);
-                popWindows->exec();
-            }
             }
     }
 }
@@ -763,101 +784,100 @@ void MainWindow::editCustomer()
         customersWidget->removeRow(k);
 
         vector<string> searchKey;
-         allUser=db.search(searchKey);
+        allUser=db.search(searchKey);
         int rowCount=0;
         for (int i=0; i<(int)allUser.size(); i++)
-            if (allUser[i]._new)
             {
-                if (rowCount==k)
-                {    user temp =allUser[i];
-                vector<string> tempN = temp._name;
-                string nameInput1 = "";
-                for (unsigned int j=0; j<tempN.size(); j++)
-                {
-                    nameInput1 = nameInput1+tempN[j]+" ";
+                if ((allUser[i]._date)==(customersWidget->item(k,0)->text().toStdString()))
+                {   user temp =allUser[i];
+                    vector<string> tempN = temp._name;
+                    string nameInput1 = "";
+                    for (unsigned int j=0; j<tempN.size(); j++)
+                    {
+                        nameInput1 = nameInput1+tempN[j]+" ";
+                    }
+                    tempN = allUser[i]._make;
+                    string makeInput1 = "";
+                    for (unsigned int j=0; j<tempN.size(); j++)
+                    {
+                        makeInput1 = makeInput1+tempN[j]+" ";
+                    }
+                    tempN = allUser[i]._model;
+                    string modelInput1 = "";
+                    for (unsigned int j=0; j<tempN.size(); j++)
+                    {
+                        modelInput1 = modelInput1+tempN[j]+" ";
+                    }
+                    nameInput= new QLineEdit(QString::fromStdString(nameInput1));
+                    popWindow = new QDialog;
+                    inputlhs = new QFormLayout();
+                    popWindow->setWindowTitle("Edit Customer");
+                    QVBoxLayout* overallLayout = new QVBoxLayout();
+
+                    QLabel* leftLabel=new QLabel("(");
+                    QLabel* rightLabel=new QLabel(")");
+                    QLabel* dashLabel=new QLabel("-");
+                    nameInput = new QLineEdit(QString::fromStdString(nameInput1));
+                    cellLayout=new QHBoxLayout();
+                    if(temp._cell.size()>=3)
+                        cell1=new QLineEdit(QString::fromStdString(temp._cell.substr(0,3)));
+                    else cell1=new QLineEdit("");
+                    if(temp._cell.size()>=6)
+                        cell2=new QLineEdit(QString::fromStdString(temp._cell.substr(3,3)));
+                    else cell2=new QLineEdit("");
+                    if(temp._cell.size()>=10)
+                        cell3=new QLineEdit(QString::fromStdString(temp._cell.substr(6,4)));
+                    else cell3=new QLineEdit("");
+                    cellLayout->addWidget(leftLabel);
+                    cellLayout->addWidget(cell1);
+                    cellLayout->addWidget(rightLabel);
+                    // cellLayout->addWidget(dashLabel);
+                    cellLayout->addWidget(cell2);
+                    cellLayout->addWidget(dashLabel);
+                    cellLayout->addWidget(cell3);
+                    inputlhs->addRow(tr("&Name:"),nameInput);
+                    orderNInput=new QLineEdit(QString::fromStdString(temp._orderNumber));
+                    inputlhs->addRow(tr("Order Number:"),orderNInput);
+                    inputlhs->addRow(tr("Cell:"),cellLayout);
+                    email = new QLineEdit(QString::fromStdString(temp._email));
+                    inputlhs->addRow(tr("&Email:"),email);
+                    makeInput = new QLineEdit(QString::fromStdString(makeInput1));
+                    inputlhs->addRow(tr("&Make:"),makeInput);
+                    modelInput = new QLineEdit(QString::fromStdString(modelInput1));
+                    inputlhs->addRow(tr("&Model:"),modelInput);
+                    colorInput2 = new QLineEdit(QString::fromStdString(temp._exterior));
+                    purpose = new QComboBox();
+                    QLabel* purposeLabel = new QLabel("Purpose:");
+                    purpose->addItem("");
+                    purpose->addItem("Purchasing");
+                    purpose->addItem("Leasing");
+                    //int index;
+                    connect(purpose, SIGNAL(currentIndexChanged(int)), this, SLOT(popUpModifier2(int)));
+                    QLabel* callDate = new QLabel("Select CallBack Date:");
+                    editC = new QCalendarWidget;
+                    editC->setGridVisible(true);
+                    //QLabel* Comment = new QLabel("Comments:");
+                    commentInput = new QTextEdit();
+                    overallLayout->addLayout(inputlhs);
+                    overallLayout->addWidget(purposeLabel);
+                    overallLayout->addWidget(purpose);
+                    overallLayout->addWidget(callDate);
+                    overallLayout->addWidget(editC);
+                    //overallLayout->addWidget(Comment);
+                    //overallLayout->addWidget(commentInput);
+                    QPushButton* saveButton = new QPushButton("Save");
+                    connect(saveButton, SIGNAL(clicked()), this, SLOT(saveInput2()));
+                    tobeErased=i;
+                    connect(saveButton, SIGNAL(clicked()), this, SLOT(dberase()));
+                    overallLayout->addWidget(saveButton);
+                    popWindow->setLayout(overallLayout);
+                    popWindow->exec();
+                    //overallLayout->addWidget(Comment);
+                    //overallLayout->addWidget(commentInput);
+                    rowCount++;
+                    // db.users.erase(allUser[i]._key);
                 }
-                tempN = allUser[i]._make;
-            string makeInput1 = "";
-            for (unsigned int j=0; j<tempN.size(); j++)
-            {
-                makeInput1 = makeInput1+tempN[j]+" ";
             }
-             tempN = allUser[i]._model;
-            string modelInput1 = "";
-            for (unsigned int j=0; j<tempN.size(); j++)
-            {
-                modelInput1 = modelInput1+tempN[j]+" ";
-            }
-                nameInput= new QLineEdit(QString::fromStdString(nameInput1));
-                popWindow = new QDialog;
-                inputlhs = new QFormLayout();
-                popWindow->setWindowTitle("Edit Customer");
-                QVBoxLayout* overallLayout = new QVBoxLayout();
-               
-                QLabel* leftLabel=new QLabel("(");
-                QLabel* rightLabel=new QLabel(")");
-                QLabel* dashLabel=new QLabel("-");
-                nameInput = new QLineEdit(QString::fromStdString(nameInput1));
-                cellLayout=new QHBoxLayout();
-                if(temp._cell.size()>=3)
-                cell1=new QLineEdit(QString::fromStdString(temp._cell.substr(0,3)));
-            else cell1=new QLineEdit("");
-          		  if(temp._cell.size()>=6)
-                cell2=new QLineEdit(QString::fromStdString(temp._cell.substr(3,3)));
-            else cell2=new QLineEdit("");
-                if(temp._cell.size()>=10)
-                cell3=new QLineEdit(QString::fromStdString(temp._cell.substr(6,4)));
-            else cell3=new QLineEdit("");
-                cellLayout->addWidget(leftLabel);
-                cellLayout->addWidget(cell1);
-                cellLayout->addWidget(rightLabel);
-                // cellLayout->addWidget(dashLabel);
-                cellLayout->addWidget(cell2);
-                cellLayout->addWidget(dashLabel);
-                cellLayout->addWidget(cell3);
-                inputlhs->addRow(tr("&Name:"),nameInput);
-                orderNInput=new QLineEdit(QString::fromStdString(temp._orderNumber));
-                inputlhs->addRow(tr("Order Number:"),orderNInput);
-                inputlhs->addRow(tr("Cell:"),cellLayout);
-                email = new QLineEdit(QString::fromStdString(temp._email));
-                inputlhs->addRow(tr("&Email:"),email);
-                makeInput = new QLineEdit(QString::fromStdString(makeInput1));
-                inputlhs->addRow(tr("&Make:"),makeInput);
-                modelInput = new QLineEdit(QString::fromStdString(modelInput1));
-                inputlhs->addRow(tr("&Model:"),modelInput);
-                colorInput2 = new QLineEdit(QString::fromStdString(temp._exterior));
-                 purpose = new QComboBox();
-    			QLabel* purposeLabel = new QLabel("Purpose:");
-    			purpose->addItem("");
-    			purpose->addItem("Purchasing");
-    			purpose->addItem("Leasing");
-    //int index;
-    connect(purpose, SIGNAL(currentIndexChanged(int)), this, SLOT(popUpModifier2(int)));
-    QLabel* callDate = new QLabel("Select CallBack Date:");
-    editC = new QCalendarWidget;
-    editC->setGridVisible(true);
-    //QLabel* Comment = new QLabel("Comments:");
-    commentInput = new QTextEdit();
-    overallLayout->addLayout(inputlhs);
-    overallLayout->addWidget(purposeLabel);
-    overallLayout->addWidget(purpose);
-    overallLayout->addWidget(callDate);
-    overallLayout->addWidget(editC);
-    //overallLayout->addWidget(Comment);
-    //overallLayout->addWidget(commentInput);
-    QPushButton* saveButton = new QPushButton("Save");
-    connect(saveButton, SIGNAL(clicked()), this, SLOT(saveInput2()));
-     tobeErased=i;
-    connect(saveButton, SIGNAL(clicked()), this, SLOT(dberase()));
-    overallLayout->addWidget(saveButton);
-    popWindow->setLayout(overallLayout);
-    popWindow->exec();
-                //overallLayout->addWidget(Comment);
-                //overallLayout->addWidget(commentInput);
-                //rowCount++;
-             // db.users.erase(allUser[i]._key);
-            }
-         }
     }
 }
 void MainWindow::dberase()
@@ -959,12 +979,12 @@ void MainWindow::showPopup()
 
 void MainWindow::saveInput()
 {   QDate presentDate=QDate::currentDate();
-        QString presentDateQS=presentDate.toString("yyyy.MM.dd");
-        string presentDateS=presentDateQS.toStdString();
-         QTime currentTime=QTime::currentTime();
-        QString cTimeString=currentTime.toString( Qt::TextDate);
-        string cTimeString2=cTimeString.toStdString();
-        presentDateS+="-"+cTimeString2;
+    QString presentDateQS=presentDate.toString("yyyy.MM.dd");
+    string presentDateS=presentDateQS.toStdString();
+    QTime currentTime=QTime::currentTime();
+    QString cTimeString=currentTime.toString( Qt::TextDate);
+    string cTimeString2=cTimeString.toStdString();
+    presentDateS+="-"+cTimeString2;
     string nameS = nameInput->text().toStdString();
     for(int i=0; i<(int)nameS.size(); i++)
         if (nameS[i]==' ') nameS[i]='*';
@@ -975,7 +995,7 @@ void MainWindow::saveInput()
     for(int i=0; i<(int)make.size(); i++)
         if (make[i]==' ') make[i]='*';
     string model=modelInput->text().toStdString();
-     for(int i=0; i<(int)model.size(); i++)
+    for(int i=0; i<(int)model.size(); i++)
         if (model[i]==' ') model[i]='*';
     string exterior=colorInput2->text().toStdString();
     string interior=colorInput->text().toStdString();
@@ -1028,17 +1048,17 @@ void MainWindow::saveToBackup()
 vector<string> MainWindow::producer(string s)
 {
     vector<string> toReturn;
-    int lastloc=0; 
-        if (s[0]==' ')
-            s=s.substr(1);
-    
-    for(int i=0;i<(int)s.size();i++)
+    int lastloc=0;
+    if (s[0]==' ')
+        s=s.substr(1);
+
+    for(int i=0; i<(int)s.size(); i++)
     {
         if (s[i]=='*')
         {
-            toReturn.push_back(s.substr(lastloc,i-lastloc));        
+            toReturn.push_back(s.substr(lastloc,i-lastloc));
             lastloc=i+1;
-        }       
+        }
     }
     toReturn.push_back(s.substr(lastloc,s.size()-lastloc));
     return toReturn;
