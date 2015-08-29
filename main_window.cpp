@@ -52,7 +52,7 @@ void MainWindow::excelPopup()
     QStringList leadHeaders;
     leadHeaders<<"date"<<"name"<<"cell"<<"Email"<<"Make"<<"Model"<<"Exterior"<<"Interior"<<"Year"<<"MSRP"<<"Options"<<"PriceQuoted"<<"Purpose"<<"Order Number";
     QStringList customerHeaders;
-    customerHeaders<<"date"<<"name"<<"cell"<<"Email"<<"Make"<<"Model"<<"Down Payment"<<"Term"<<"monthly payment"<<"Miles/Year"<<"Dotd"<<"purpose"<<"Order Number";
+    customerHeaders<<"date"<<"term"<<"End Date"<<"name"<<"cell"<<"make"<<"model"<<"purpose"<<"DownPayment"<<"Monthly"<<"Miles/year"<<"Dotd"<<"Order Number";
     vector<string> searchKey;
     vector<user> allUser=db.search(searchKey);
     QHBoxLayout* leadButtons=new QHBoxLayout();
@@ -179,40 +179,44 @@ void MainWindow::excelPopup()
                 modelInput1 = modelInput1+tempN[j]+" ";
             }
            // cout<<nameInput1;
+             QString dueDateS=QString::fromStdString( allUser[i]._date.substr(0,10));
+        QDate dueDate=QDate::fromString(dueDateS,"yyyy.MM.dd").addMonths(allUser[i]._term);
             QTableWidgetItem* dateItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._date));
             customersWidget->setItem(customernum,0, dateItem);
             QTableWidgetItem* nameItem=new QTableWidgetItem(QString::fromStdString(nameInput1));
-            customersWidget->setItem(customernum,1, nameItem);
+            customersWidget->setItem(customernum,3, nameItem);
             QTableWidgetItem* cellItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._cell));
-            customersWidget->setItem(customernum,2, cellItem);
-            QTableWidgetItem* emailItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._email));
-            customersWidget->setItem(customernum,3, emailItem);
+            customersWidget->setItem(customernum,4, cellItem);
+           // QTableWidgetItem* emailItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._email));
+           // customersWidget->setItem(customernum,3, emailItem);
             QTableWidgetItem* makeItem=new QTableWidgetItem(QString::fromStdString(makeInput1));
-            customersWidget->setItem(customernum,4, makeItem);
+            customersWidget->setItem(customernum,5, makeItem);
             QTableWidgetItem* modelItem=new QTableWidgetItem(QString::fromStdString(modelInput1));
-            customersWidget->setItem(customernum,5, modelItem);
+            customersWidget->setItem(customernum,6, modelItem);
             if (allUser[i]._lease)
             {
                 QTableWidgetItem* downItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._down));
-                customersWidget->setItem(customernum,6, downItem);
+                customersWidget->setItem(customernum,8, downItem);
                 QTableWidgetItem* termItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._term));
-                customersWidget->setItem(customernum,7, termItem);
+                customersWidget->setItem(customernum,1, termItem);
+                QTableWidgetItem* dueItem=new QTableWidgetItem(tr("%1").arg(dueDate.toString()));
+                customersWidget->setItem(customernum,2, dueItem);
                 QTableWidgetItem* monthlyItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._monthly));
-                customersWidget->setItem(customernum,8, monthlyItem);
+                customersWidget->setItem(customernum,9, monthlyItem);
                 QTableWidgetItem* milesItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._miles));
-                customersWidget->setItem(customernum,9, milesItem);
+                customersWidget->setItem(customernum,10, milesItem);
             }
             else
             {
                 QTableWidgetItem* dotdItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._dotd));
-                customersWidget->setItem(customernum,10, dotdItem);
+                customersWidget->setItem(customernum,11, dotdItem);
             }
             QTableWidgetItem* purposeItem;
             if (allUser[i]._lease)
                 purposeItem=new QTableWidgetItem("lease");
             else
                 purposeItem=new QTableWidgetItem("Purchase");
-            customersWidget->setItem(i,11, purposeItem);
+            customersWidget->setItem(i,7, purposeItem);
             QTableWidgetItem* orderNItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._orderNumber));
             customersWidget->setItem(leadnum,12,orderNItem);
             customernum++;
@@ -237,6 +241,7 @@ void MainWindow::excelPopup()
     excelWindow->setWindowState(Qt::WindowMaximized);
     //  excelWindow->resize(1200,600);
     excelWindow->exec();
+    
 }
 
 void MainWindow::deleteLead()
@@ -392,42 +397,47 @@ void MainWindow::viewPopup()
                 modelInput1 = modelInput1+tempN[j]+" ";
             }
            // cout<<nameInput1;
+
+           QString dueDateS=QString::fromStdString( allUser[i]._date.substr(0,10));
+        QDate dueDate=QDate::fromString(dueDateS,"yyyy.MM.dd").addMonths(allUser[i]._term);
             QTableWidgetItem* dateItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._date));
             customersWidget->setItem(customernum,0, dateItem);
             QTableWidgetItem* nameItem=new QTableWidgetItem(QString::fromStdString(nameInput1));
-            customersWidget->setItem(customernum,1, nameItem);
+            customersWidget->setItem(customernum,3, nameItem);
             QTableWidgetItem* cellItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._cell));
-            customersWidget->setItem(customernum,2, cellItem);
-            QTableWidgetItem* emailItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._email));
-            customersWidget->setItem(customernum,3, emailItem);
+            customersWidget->setItem(customernum,4, cellItem);
+           // QTableWidgetItem* emailItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._email));
+           // customersWidget->setItem(customernum,3, emailItem);
             QTableWidgetItem* makeItem=new QTableWidgetItem(QString::fromStdString(makeInput1));
-            customersWidget->setItem(customernum,4, makeItem);
+            customersWidget->setItem(customernum,5, makeItem);
             QTableWidgetItem* modelItem=new QTableWidgetItem(QString::fromStdString(modelInput1));
-            customersWidget->setItem(customernum,5, modelItem);
+            customersWidget->setItem(customernum,6, modelItem);
             if (allUser[i]._lease)
             {
                 QTableWidgetItem* downItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._down));
-                customersWidget->setItem(customernum,6, downItem);
+                customersWidget->setItem(customernum,8, downItem);
                 QTableWidgetItem* termItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._term));
-                customersWidget->setItem(customernum,7, termItem);
+                customersWidget->setItem(customernum,1, termItem);
+                QTableWidgetItem* dueItem=new QTableWidgetItem(tr("%1").arg(dueDate.toString()));
+                customersWidget->setItem(customernum,2, dueItem);
                 QTableWidgetItem* monthlyItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._monthly));
-                customersWidget->setItem(customernum,8, monthlyItem);
+                customersWidget->setItem(customernum,9, monthlyItem);
                 QTableWidgetItem* milesItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._miles));
-                customersWidget->setItem(customernum,9, milesItem);
+                customersWidget->setItem(customernum,10, milesItem);
             }
             else
             {
                 QTableWidgetItem* dotdItem=new QTableWidgetItem(tr("%1").arg(allUser[i]._dotd));
-                customersWidget->setItem(customernum,10, dotdItem);
+                customersWidget->setItem(customernum,11, dotdItem);
             }
             QTableWidgetItem* purposeItem;
             if (allUser[i]._lease)
                 purposeItem=new QTableWidgetItem("lease");
             else
                 purposeItem=new QTableWidgetItem("Purchase");
-            customersWidget->setItem(customernum,11, purposeItem);
+            customersWidget->setItem(i,7, purposeItem);
             QTableWidgetItem* orderNItem=new QTableWidgetItem(QString::fromStdString(allUser[i]._orderNumber));
-            customersWidget->setItem(leadnum,12,orderNItem);
+            customersWidget->setItem(customernum,12,orderNItem);
             customernum++;
         }
     leadsWidget->setSortingEnabled(true);
@@ -443,22 +453,52 @@ void MainWindow::reminder()
     QVBoxLayout* overallLayout = new QVBoxLayout();
     reminderWindow.setWindowTitle("Reminder");
     QListWidget* reminderList = new QListWidget(0);
-    QLabel* tdLabel=new QLabel("Today:");
+    QLabel* tdLabel=new QLabel("Next 6 month:");
     //Need further work
     overallLayout->addWidget(tdLabel);
     overallLayout->addWidget(reminderList);
-
-
-    QString presentDateQS4=QDate::currentDate().toString("yyyy.MM.dd");
-    string qdate = presentDateQS4.toStdString();
-   // cout << db.findDate(qdate).size() << " size" << endl;
-    for (unsigned int i=0; i<db.findDate(qdate).size(); i++)
+     QLabel* tmrLabel=new QLabel("next 3 month:");
+    QListWidget* tmrList = new QListWidget(0);
+    overallLayout->addWidget(tmrLabel);
+    overallLayout->addWidget(tmrList);
+     QLabel* weekLabel=new QLabel("next Month:");
+    QListWidget* weekList = new QListWidget(0);
+    overallLayout->addWidget(weekLabel);
+    overallLayout->addWidget(weekList);
+     vector<string> searchKey;
+    allUser=db.search(searchKey);
+for (int i=0;i<allUser.size();i++)
+   {
+    cout<<allUser[i]._new<<" "<<allUser[i]._lease<<endl;
+    if ((allUser[i]._new)&&(allUser[i]._lease))
     {
-        string display = db.findDate(qdate)[i].displayString();
-      //  cout << display << endl;
+        cout<<allUser[i]._name[0];
+        QString dueDateS=QString::fromStdString( allUser[i]._date.substr(0,10));
+       cout<<allUser[i]._date.substr(0,10)<<endl;
+        QDate dueDate=QDate::fromString(dueDateS,"yyyy.MM.dd").addMonths(allUser[i]._term);
+        cout<<dueDate.toString().toStdString()<<endl;
+        if ((QDate::currentDate().addMonths(6)>dueDate)&&(QDate::currentDate().addMonths(3)<=dueDate))
+        {
+        string display = allUser[i].displayString();
         reminderList->addItem(QString::fromStdString(display));
+        }
+        if ((QDate::currentDate().addMonths(3)>dueDate)&&(QDate::currentDate().addMonths(1)<=dueDate))
+        {
+        string display = allUser[i].displayString();
+        tmrList->addItem(QString::fromStdString(display));
+        }
+        if ((QDate::currentDate().addMonths(1)>dueDate)&&(QDate::currentDate()<=dueDate))
+        {
+        string display = allUser[i].displayString();
+        weekList->addItem(QString::fromStdString(display));
+        }
     }
-    QLabel* tmrLabel=new QLabel("Tomorrow:");
+}
+   // QString presentDateQS4=QDate::currentDate().toString("yyyy.MM.dd");
+   // string qdate = presentDateQS4.toStdString();
+   // cout << db.findDate(qdate).size() << " size" << endl;
+  //  for (unsigned int i=0; i<db.findDate(qdate).size(); i++)
+  /*  QLabel* tmrLabel=new QLabel("Tomorrow:");
     QListWidget* tmrList = new QListWidget(0);
     overallLayout->addWidget(tmrLabel);
     overallLayout->addWidget(tmrList);
@@ -490,6 +530,7 @@ void MainWindow::reminder()
     }
     QPushButton* select = new QPushButton("Select");
     connect(select, SIGNAL(clicked()), this, SLOT(editUser()));
+    */
     reminderWindow.setLayout(overallLayout);
     reminderWindow.exec();
 
